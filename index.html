@@ -17,47 +17,56 @@
     --shadow:0 5px 0 rgba(67,48,31,.18);
     --halo:0 1px 0 rgba(255,255,255,.95), 0 0 10px rgba(255,255,255,.9), 0 0 20px rgba(255,255,255,.6);
   }
-  *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
+  *{
+    margin:0;padding:0;box-sizing:border-box;
+    /* NADA É SELECIONÁVEL */
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;
+    -webkit-touch-callout:none; /* tira o menu "copar/compartilhar" do iPhone */
+  }
+  /* O DOCUMENTO NUNCA ROLA — quem rola é .pagina lá dentro.
+     É isso que trava o fundo 100%, sem "adiantada" do celular. */
+  html,body{height:100%;overflow:hidden;overscroll-behavior:none}
   body{
     font-family:'Nunito',sans-serif;color:var(--ink);
-    background-color:var(--paper); /* só aparece enquanto a foto carrega */
+    background-color:var(--paper); /* só reserva enquanto a foto carrega */
     line-height:1.6;font-size:1.02rem;
-    overflow-x:hidden;
     -webkit-text-size-adjust:100%;
     -webkit-tap-highlight-color:transparent;
   }
 
-  /* ============ WALLPAPER planalto.jpg — 100% TRAVADO ============
-     • position:fixed   → a camada NUNCA se move ao rolar;
-     • height:100lvh    → usa a MAIOR viewport do celular, então o
-                          tamanho da foto fica SEMPRE igual, mesmo
-                          quando a barra de endereço some/aparece
-                          (era isso que fazia a imagem "andar/zoomar");
-     • translateZ(0)    → promove a foto a camada de GPU: zero
-                          tremedeira durante a rolagem;
-     • pointer-events:none → nunca atrapalha toques e cliques. */
+  /* ============ WALLPAPER planalto.jpg — IMÓVEL ============
+     Como o documento não rola mais, esta camada nunca é
+     reposicionada nem redimensionada: zero movimento. */
   .fundo-fixo{
-    position:fixed;
-    top:50%; left:50%;
+    position:fixed; top:0; left:0;
     width:100vw;
-    height:100vh;   /* fallback para navegadores antigos */
-    height:100lvh;  /* tamanho constante no celular */
-    -webkit-transform:translate(-50%,-50%) translateZ(0);
-    transform:translate(-50%,-50%) translateZ(0);
-    backface-visibility:hidden;
+    height:100vh;  /* fallback */
+    height:100lvh; /* altura constante mesmo com a barra do celular sumindo */
     background:url('planalto.jpg') center center / cover no-repeat;
-    z-index:-1;
+    -webkit-transform:translateZ(0); transform:translateZ(0);
+    z-index:0;
     pointer-events:none;
   }
+  /* Contêiner que rola o conteúdo por cima da foto */
+  .pagina{
+    position:relative; z-index:1;
+    height:100%;
+    overflow-y:auto; overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:none; /* mata o "puxar para atualizar" */
+    scroll-behavior:smooth;   /* links do topo continuam deslizando */
+  }
+  .pagina::-webkit-scrollbar{width:10px}
+  .pagina::-webkit-scrollbar-thumb{background:rgba(67,48,31,.35);border-radius:99px}
+  .pagina::-webkit-scrollbar-track{background:rgba(67,48,31,.08)}
 
   h1,h2,h3,h4{font-family:'Fredoka',sans-serif;line-height:1.2;
     text-shadow:0 1px 0 rgba(255,255,255,.95), 0 0 12px rgba(255,255,255,.95), 0 0 26px rgba(255,255,255,.7)}
   i[data-lucide], svg.lucide{vertical-align:-3px}
-  main, .topo, footer{ text-shadow:var(--halo); }
+  .topo, main{ text-shadow:var(--halo); }
   .btn,.opt{touch-action:manipulation}
 
-  .wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 20px 70px}
   section{padding:54px 0 18px;scroll-margin-top:16px}
 
   /* ---------- TOPO (transparente sobre a foto) ---------- */
@@ -87,8 +96,6 @@
   .sec-head p{color:var(--ink);font-weight:800}
 
   .panel{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:24px}
-  /* Animação de entrada: em telas pequenas fica DESLIGADA por padrão
-     (garante que nada fique invisível); o JS liga de novo em telas grandes */
   .reveal{transition:opacity .7s ease, transform .7s ease}
   @media(min-width:900px){
     .reveal{opacity:0;transform:translateY(24px)}
@@ -216,13 +223,6 @@
   .confetti{position:fixed;top:-24px;z-index:300;pointer-events:none;animation:fall linear forwards}
   @keyframes fall{to{transform:translateY(112vh) rotate(760deg);opacity:.9}}
 
-  /* ---------- RODAPÉ TRANSPARENTE ---------- */
-  footer{margin-top:60px;border-top:4px solid var(--ink);text-align:center;padding:34px 18px;color:var(--ink)}
-  footer .verse{font-family:'Fredoka';font-weight:600;font-size:1.25rem;margin-bottom:6px}
-  footer .ref{font-weight:800;font-size:.85rem}
-  footer .note{margin-top:14px;font-size:.85rem}
-  footer .note b{color:var(--green-d)}
-
   /* ============ VIDRO FOSCO (transparente meio borrado) ============ */
   .panel,.pcard,.mcard,.tcard,.quiz-card,.aviso,.nota,.kicker,.prof-name,.tag,
   .pts-badge,.unico-badge,.salvo-badge,.malt,.cena-caps .cap,.quiz-fb,.btn,.opt{
@@ -251,7 +251,7 @@
 
   /* ============ CORREÇÕES PARA CELULAR ============ */
   @media(max-width:640px){
-    .wrap{padding:0 14px}
+    .wrap{padding:0 14px 50px}
     section{padding:42px 0 10px}
     .topo{padding:44px 16px 24px}
     .prof-name{font-size:1rem;padding:7px 15px}
@@ -283,187 +283,188 @@
     .big-pts span{font-size:1.1rem}
     .qchip{width:30px;height:30px;font-size:.85rem}
     .malt{font-size:.82rem;padding:7px 10px}
-    footer{padding:28px 16px}
-    footer .verse{font-size:1.08rem}
   }
 </style>
 </head>
 <body>
 
-<!-- Camada do papel de parede: fixa, travada e fora do fluxo da página -->
+<!-- Camada do papel de parede: imóvel, atrás de tudo -->
 <div class="fundo-fixo" aria-hidden="true"></div>
 
-<!-- ============ TOPO (transparente sobre a foto) ============ -->
-<header class="topo" id="inicio">
-  <span class="kicker"><i data-lucide="compass" style="width:16px;height:16px"></i> Escola Bíblica Infantil • Geografia da Bíblia</span>
-  <h1>As Terras Bíblicas: <span class="hl">Planaltos e Montes</span></h1>
-  <span class="prof-name"><i data-lucide="graduation-cap" style="width:20px;height:20px"></i> Professora Debora Vezetiv</span>
-  <p class="intro">Vamos viajar pela terra da Bíblia e conhecer os lugares famosos onde aconteceram histórias incríveis!</p>
-  <nav class="hero-ctas">
-    <a class="btn green" href="#planaltos"><i data-lucide="footprints" style="width:18px;height:18px"></i> Planaltos</a>
-    <a class="btn orange" href="#relevos"><i data-lucide="mountain" style="width:18px;height:18px"></i> Montes</a>
-    <a class="btn sun" href="#montes19"><i data-lucide="book-open" style="width:18px;height:18px"></i> Os 19 montes</a>
-  </nav>
-</header>
+<!-- Tudo que rola fica DENTRO deste contêiner -->
+<div class="pagina">
 
-<main class="wrap">
+  <!-- ============ TOPO ============ -->
+  <header class="topo" id="inicio">
+    <span class="kicker"><i data-lucide="compass" style="width:16px;height:16px"></i> Escola Bíblica Infantil • Geografia da Bíblia</span>
+    <h1>As Terras Bíblicas: <span class="hl">Planaltos e Montes</span></h1>
+    <span class="prof-name"><i data-lucide="graduation-cap" style="width:20px;height:20px"></i> Professora Debora Vezetiv</span>
+    <p class="intro">Vamos viajar pela terra da Bíblia e conhecer os lugares famosos onde aconteceram histórias incríveis!</p>
+    <nav class="hero-ctas">
+      <a class="btn green" href="#planaltos"><i data-lucide="footprints" style="width:18px;height:18px"></i> Planaltos</a>
+      <a class="btn orange" href="#relevos"><i data-lucide="mountain" style="width:18px;height:18px"></i> Montes</a>
+      <a class="btn sun" href="#montes19"><i data-lucide="book-open" style="width:18px;height:18px"></i> Os 19 montes</a>
+    </nav>
+  </header>
 
-  <!-- ============ PARTE 1 : PLANALTOS ============ -->
-  <section id="planaltos">
-    <div class="sec-head reveal">
-      <span class="sec-tag"><i data-lucide="footprints" style="width:14px;height:14px"></i> Parte 1</span>
-      <h2>O que é um planalto?</h2>
-    </div>
+  <main class="wrap">
 
-    <div class="duas-colunas reveal">
-      <div class="panel">
-        <p class="big-quote">Um <b>planalto</b> é uma <b>terra bem grande</b> que fica <b>levantada</b>, com o topo <b>mais ou menos plano</b>, e que é <b>cortada por vales</b> encaixados nela.</p>
-        <p style="margin-top:12px;font-weight:800">Imagine uma <b>mesa gigante feita de terra</b>: o tampo é o planalto, e os vales são como cortes fundos feitos nas suas laterais, por onde passam os rios.</p>
+    <!-- ============ PARTE 1 : PLANALTOS ============ -->
+    <section id="planaltos">
+      <div class="sec-head reveal">
+        <span class="sec-tag"><i data-lucide="footprints" style="width:14px;height:14px"></i> Parte 1</span>
+        <h2>O que é um planalto?</h2>
       </div>
-      <div class="panel" style="padding:14px">
-        <svg class="cena-svg" viewBox="0 0 520 250" aria-label="Desenho mostrando o perfil de um planalto">
-          <rect class="fundo" x="0" y="0" width="520" height="250" rx="14"/>
-          <circle cx="452" cy="48" r="26" fill="#F2B63C" stroke="#43301F" stroke-width="4"/>
-          <path d="M30 40 a16 16 0 0 1 30 -6 a14 14 0 0 1 24 5 a11 11 0 0 1 8 10 h-66 a11 11 0 0 1 4 -9z" fill="#fff" stroke="#43301F" stroke-width="3.6"/>
-          <path d="M10 96 H240 L280 168 L320 96 H510 V240 H10 Z" fill="#C9A86B" stroke="#43301F" stroke-width="5" stroke-linejoin="round"/>
-          <path d="M10 96 H240 L280 168 L320 96" fill="none" stroke="#5F8F3E" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M272 190 C 280 205 272 218 280 232" fill="none" stroke="#6FAEC6" stroke-width="9" stroke-linecap="round"/>
-          <line x1="120" y1="60" x2="120" y2="88" stroke="#43301F" stroke-width="3" stroke-dasharray="5 5"/>
-          <text x="120" y="50" text-anchor="middle" font-size="15" font-weight="800" fill="#43301F" font-family="Nunito">topo plano e elevado</text>
-          <line x1="395" y1="150" x2="316" y2="150" stroke="#43301F" stroke-width="3" stroke-dasharray="5 5"/>
-          <text x="400" y="142" font-size="15" font-weight="800" fill="#43301F" font-family="Nunito">vale encaixado</text>
-          <line x1="352" y1="214" x2="296" y2="200" stroke="#43301F" stroke-width="3" stroke-dasharray="5 5"/>
-          <text x="356" y="222" font-size="15" font-weight="800" fill="#43301F" font-family="Nunito">rio no vale</text>
-        </svg>
-      </div>
-    </div>
 
-    <div class="sec-head reveal" style="margin-bottom:24px">
-      <h2 style="font-size:1.5rem">Os 8 planaltos das Terras Bíblicas</h2>
-    </div>
-    <div class="grade reveal" id="gradePlanaltos"></div>
-  </section>
-
-  <!-- ============ PARTE 2 : MONTES ============ -->
-  <section id="relevos">
-    <div class="sec-head reveal">
-      <span class="sec-tag"><i data-lucide="mountain" style="width:14px;height:14px"></i> Parte 2</span>
-      <h2>Por que os montes eram tão importantes?</h2>
-    </div>
-
-    <div class="duas-colunas reveal">
-      <div class="panel">
-        <p style="font-weight:700">Quando o povo de Israel morou no <b>Egito</b>, a terra era bem <b>plana</b> e <b>quase não chovia</b>. Mas quando chegaram em <b>Canaã</b>, tudo mudou: o lugar era cheio de <b>montes</b>, chovia <b>bem bastante</b> e a terra era <b>ótima para plantar</b>!</p>
-        <p style="margin-top:12px;font-weight:700">Por isso, do livro de <b>Êxodo</b> para frente, os montes aparecem em <b>todas as lembranças do povo de Israel</b>. E eles tinham um truque esperto: construíam suas <b>cidades no alto dos montes</b> para ficarem <b>protegidos</b> dos inimigos!</p>
-        <div class="cena-caps">
-          <div class="cap"><b>Egito</b>terras planas, quase sem chuva</div>
-          <div class="cap"><b>Canaã</b>montes, chuva e terra fértil</div>
+      <div class="duas-colunas reveal">
+        <div class="panel">
+          <p class="big-quote">Um <b>planalto</b> é uma <b>terra bem grande</b> que fica <b>levantada</b>, com o topo <b>mais ou menos plano</b>, e que é <b>cortada por vales</b> encaixados nela.</p>
+          <p style="margin-top:12px;font-weight:800">Imagine uma <b>mesa gigante feita de terra</b>: o tampo é o planalto, e os vales são como cortes fundos feitos nas suas laterais, por onde passam os rios.</p>
+        </div>
+        <div class="panel" style="padding:14px">
+          <svg class="cena-svg" viewBox="0 0 520 250" aria-label="Desenho mostrando o perfil de um planalto">
+            <rect class="fundo" x="0" y="0" width="520" height="250" rx="14"/>
+            <circle cx="452" cy="48" r="26" fill="#F2B63C" stroke="#43301F" stroke-width="4"/>
+            <path d="M30 40 a16 16 0 0 1 30 -6 a14 14 0 0 1 24 5 a11 11 0 0 1 8 10 h-66 a11 11 0 0 1 4 -9z" fill="#fff" stroke="#43301F" stroke-width="3.6"/>
+            <path d="M10 96 H240 L280 168 L320 96 H510 V240 H10 Z" fill="#C9A86B" stroke="#43301F" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M10 96 H240 L280 168 L320 96" fill="none" stroke="#5F8F3E" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M272 190 C 280 205 272 218 280 232" fill="none" stroke="#6FAEC6" stroke-width="9" stroke-linecap="round"/>
+            <line x1="120" y1="60" x2="120" y2="88" stroke="#43301F" stroke-width="3" stroke-dasharray="5 5"/>
+            <text x="120" y="50" text-anchor="middle" font-size="15" font-weight="800" fill="#43301F" font-family="Nunito">topo plano e elevado</text>
+            <line x1="395" y1="150" x2="316" y2="150" stroke="#43301F" stroke-width="3" stroke-dasharray="5 5"/>
+            <text x="400" y="142" font-size="15" font-weight="800" fill="#43301F" font-family="Nunito">vale encaixado</text>
+            <line x1="352" y1="214" x2="296" y2="200" stroke="#43301F" stroke-width="3" stroke-dasharray="5 5"/>
+            <text x="356" y="222" font-size="15" font-weight="800" fill="#43301F" font-family="Nunito">rio no vale</text>
+          </svg>
         </div>
       </div>
-      <div class="panel" style="padding:14px">
-        <svg class="cena-svg" viewBox="0 0 560 250" aria-label="Comparação entre o Egito plano e Canaã montanhosa">
-          <rect class="fundo" x="0" y="0" width="560" height="250" rx="14"/>
-          <line x1="280" y1="12" x2="280" y2="238" stroke="#43301F" stroke-width="3" stroke-dasharray="8 8"/>
-          <g stroke-linejoin="round">
-            <path d="M30 178 H250" stroke="#B08A4F" stroke-width="6" stroke-linecap="round"/>
-            <path d="M60 178 L110 92 L160 178 Z" fill="#D9B878" stroke="#43301F" stroke-width="4"/>
-            <path d="M140 178 L180 122 L220 178 Z" fill="#D9B878" stroke="#43301F" stroke-width="4"/>
-            <circle cx="222" cy="52" r="22" fill="#F2B63C" stroke="#43301F" stroke-width="4"/>
-            <g transform="translate(58,178)">
-              <path d="M0 0 C 2 -26 20 -30 20 -46" fill="none" stroke="#8A6A3B" stroke-width="5" stroke-linecap="round"/>
-              <path d="M20 -46 q-16 -12 -26 -2 q14 -2 20 8 q-2 -16 14 -20 q-14 0 -14 14" fill="#5F8F3E" stroke="#43301F" stroke-width="3.4"/>
-            </g>
-            <text x="140" y="216" text-anchor="middle" font-size="17" font-weight="800" fill="#43301F" font-family="Fredoka">EGITO</text>
-          </g>
-          <g stroke-linejoin="round">
-            <path d="M310 178 L370 92 L410 138 L455 74 L530 178" fill="#9CB874" stroke="#43301F" stroke-width="4.4"/>
-            <path d="M437 92 L455 74 L470 92 L462 98 L455 90 L447 97 Z" fill="#fff" stroke="#43301F" stroke-width="3.4"/>
-            <g transform="translate(455,52)">
-              <rect x="-20" y="0" width="12" height="16" fill="#E8D9AE" stroke="#43301F" stroke-width="3"/>
-              <rect x="-4" y="-6" width="12" height="22" fill="#E8D9AE" stroke="#43301F" stroke-width="3"/>
-              <rect x="12" y="2" width="10" height="14" fill="#E8D9AE" stroke="#43301F" stroke-width="3"/>
-              <path d="M-22 0 h36" stroke="#43301F" stroke-width="3"/>
-            </g>
-            <g transform="translate(340,52)">
-              <path d="M-26 8 a15 15 0 0 1 28 -6 a13 13 0 0 1 22 4 a10 10 0 0 1 7 9 h-60 a10 10 0 0 1 3 -7z" fill="#fff" stroke="#43301F" stroke-width="3.6"/>
-              <g stroke="#2E7A8A" stroke-width="4" stroke-linecap="round">
-                <line x1="-16" y1="24" x2="-18" y2="34"/><line x1="0" y1="26" x2="-2" y2="36"/><line x1="16" y1="24" x2="14" y2="34"/>
+
+      <div class="sec-head reveal" style="margin-bottom:24px">
+        <h2 style="font-size:1.5rem">Os 8 planaltos das Terras Bíblicas</h2>
+      </div>
+      <div class="grade reveal" id="gradePlanaltos"></div>
+    </section>
+
+    <!-- ============ PARTE 2 : MONTES ============ -->
+    <section id="relevos">
+      <div class="sec-head reveal">
+        <span class="sec-tag"><i data-lucide="mountain" style="width:14px;height:14px"></i> Parte 2</span>
+        <h2>Por que os montes eram tão importantes?</h2>
+      </div>
+
+      <div class="duas-colunas reveal">
+        <div class="panel">
+          <p style="font-weight:700">Quando o povo de Israel morou no <b>Egito</b>, a terra era bem <b>plana</b> e <b>quase não chovia</b>. Mas quando chegaram em <b>Canaã</b>, tudo mudou: o lugar era cheio de <b>montes</b>, chovia <b>bem bastante</b> e a terra era <b>ótima para plantar</b>!</p>
+          <p style="margin-top:12px;font-weight:700">Por isso, do livro de <b>Êxodo</b> para frente, os montes aparecem em <b>todas as lembranças do povo de Israel</b>. E eles tinham um truque esperto: construíam suas <b>cidades no alto dos montes</b> para ficarem <b>protegidos</b> dos inimigos!</p>
+          <div class="cena-caps">
+            <div class="cap"><b>Egito</b>terras planas, quase sem chuva</div>
+            <div class="cap"><b>Canaã</b>montes, chuva e terra fértil</div>
+          </div>
+        </div>
+        <div class="panel" style="padding:14px">
+          <svg class="cena-svg" viewBox="0 0 560 250" aria-label="Comparação entre o Egito plano e Canaã montanhosa">
+            <rect class="fundo" x="0" y="0" width="560" height="250" rx="14"/>
+            <line x1="280" y1="12" x2="280" y2="238" stroke="#43301F" stroke-width="3" stroke-dasharray="8 8"/>
+            <g stroke-linejoin="round">
+              <path d="M30 178 H250" stroke="#B08A4F" stroke-width="6" stroke-linecap="round"/>
+              <path d="M60 178 L110 92 L160 178 Z" fill="#D9B878" stroke="#43301F" stroke-width="4"/>
+              <path d="M140 178 L180 122 L220 178 Z" fill="#D9B878" stroke="#43301F" stroke-width="4"/>
+              <circle cx="222" cy="52" r="22" fill="#F2B63C" stroke="#43301F" stroke-width="4"/>
+              <g transform="translate(58,178)">
+                <path d="M0 0 C 2 -26 20 -30 20 -46" fill="none" stroke="#8A6A3B" stroke-width="5" stroke-linecap="round"/>
+                <path d="M20 -46 q-16 -12 -26 -2 q14 -2 20 8 q-2 -16 14 -20 q-14 0 -14 14" fill="#5F8F3E" stroke="#43301F" stroke-width="3.4"/>
               </g>
+              <text x="140" y="216" text-anchor="middle" font-size="17" font-weight="800" fill="#43301F" font-family="Fredoka">EGITO</text>
             </g>
-            <text x="424" y="216" text-anchor="middle" font-size="17" font-weight="800" fill="#43301F" font-family="Fredoka">CANAÃ</text>
+            <g stroke-linejoin="round">
+              <path d="M310 178 L370 92 L410 138 L455 74 L530 178" fill="#9CB874" stroke="#43301F" stroke-width="4.4"/>
+              <path d="M437 92 L455 74 L470 92 L462 98 L455 90 L447 97 Z" fill="#fff" stroke="#43301F" stroke-width="3.4"/>
+              <g transform="translate(455,52)">
+                <rect x="-20" y="0" width="12" height="16" fill="#E8D9AE" stroke="#43301F" stroke-width="3"/>
+                <rect x="-4" y="-6" width="12" height="22" fill="#E8D9AE" stroke="#43301F" stroke-width="3"/>
+                <rect x="12" y="2" width="10" height="14" fill="#E8D9AE" stroke="#43301F" stroke-width="3"/>
+                <path d="M-22 0 h36" stroke="#43301F" stroke-width="3"/>
+              </g>
+              <g transform="translate(340,52)">
+                <path d="M-26 8 a15 15 0 0 1 28 -6 a13 13 0 0 1 22 4 a10 10 0 0 1 7 9 h-60 a10 10 0 0 1 3 -7z" fill="#fff" stroke="#43301F" stroke-width="3.6"/>
+                <g stroke="#2E7A8A" stroke-width="4" stroke-linecap="round">
+                  <line x1="-16" y1="24" x2="-18" y2="34"/><line x1="0" y1="26" x2="-2" y2="36"/><line x1="16" y1="24" x2="14" y2="34"/>
+                </g>
+              </g>
+              <text x="424" y="216" text-anchor="middle" font-size="17" font-weight="800" fill="#43301F" font-family="Fredoka">CANAÃ</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="panel reveal">
+        <h3 style="font-size:1.4rem;margin-bottom:8px">Outeiro, monte, montanha ou cordilheira?</h3>
+        <p style="font-weight:700">Essas palavras mostram o <b>tamanho</b> de cada elevação — do menor para o maior:</p>
+        <svg class="cena-svg" viewBox="0 0 860 300" aria-label="Comparação de tamanhos entre outeiro, monte, montanha e cordilheira" style="margin-top:14px">
+          <rect class="fundo" x="0" y="0" width="860" height="300" rx="14"/>
+          <line x1="16" y1="252" x2="844" y2="252" stroke="#5F8F3E" stroke-width="9" stroke-linecap="round"/>
+          <g>
+            <path d="M60 250 Q140 196 220 250 Z" fill="#A9C57F" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
+            <text x="140" y="290" text-anchor="middle" font-size="19" font-weight="800" fill="#43301F" font-family="Fredoka">1. Outeiro</text>
+          </g>
+          <g>
+            <path d="M255 250 Q345 118 435 250 Z" fill="#7FA254" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
+            <text x="345" y="290" text-anchor="middle" font-size="19" font-weight="800" fill="#43301F" font-family="Fredoka">2. Monte</text>
+          </g>
+          <g>
+            <path d="M470 250 L550 84 L630 250 Z" fill="#B08A4F" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M531 118 L550 84 L569 118 L559 126 L550 114 L541 125 Z" fill="#fff" stroke="#43301F" stroke-width="3.4" stroke-linejoin="round"/>
+            <text x="550" y="290" text-anchor="middle" font-size="19" font-weight="800" fill="#43301F" font-family="Fredoka">3. Montanha</text>
+          </g>
+          <g>
+            <path d="M660 250 L706 130 L740 190 L780 96 L824 250 Z" fill="#7FA254" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M765 130 L780 96 L794 130 L786 137 L780 126 L773 136 Z" fill="#fff" stroke="#43301F" stroke-width="3.2" stroke-linejoin="round"/>
+            <text x="742" y="290" text-anchor="middle" font-size="19" font-weight="800" fill="#43301F" font-family="Fredoka">4. Cordilheira</text>
           </g>
         </svg>
+        <div class="tipos" id="tipos"></div>
+        <div class="nota"><i data-lucide="lightbulb" style="width:22px;height:22px;color:#8A6A1B;flex:0 0 auto"></i>
+          <span>Ninguém pega uma régua para medir e decidir o nome de cada um: essas palavras são <b>valores relativos</b>, ou seja, dependem do tamanho umas das outras!</span></div>
       </div>
-    </div>
+    </section>
 
-    <div class="panel reveal">
-      <h3 style="font-size:1.4rem;margin-bottom:8px">Outeiro, monte, montanha ou cordilheira?</h3>
-      <p style="font-weight:700">Essas palavras mostram o <b>tamanho</b> de cada elevação — do menor para o maior:</p>
-      <svg class="cena-svg" viewBox="0 0 860 300" aria-label="Comparação de tamanhos entre outeiro, monte, montanha e cordilheira" style="margin-top:14px">
-        <rect class="fundo" x="0" y="0" width="860" height="300" rx="14"/>
-        <line x1="16" y1="252" x2="844" y2="252" stroke="#5F8F3E" stroke-width="9" stroke-linecap="round"/>
-        <g>
-          <path d="M60 250 Q140 196 220 250 Z" fill="#A9C57F" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
-          <text x="140" y="290" text-anchor="middle" font-size="19" font-weight="800" fill="#43301F" font-family="Fredoka">1. Outeiro</text>
-        </g>
-        <g>
-          <path d="M255 250 Q345 118 435 250 Z" fill="#7FA254" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
-          <text x="345" y="290" text-anchor="middle" font-size="19" font-weight="800" fill="#43301F" font-family="Fredoka">2. Monte</text>
-        </g>
-        <g>
-          <path d="M470 250 L550 84 L630 250 Z" fill="#B08A4F" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
-          <path d="M531 118 L550 84 L569 118 L559 126 L550 114 L541 125 Z" fill="#fff" stroke="#43301F" stroke-width="3.4" stroke-linejoin="round"/>
-          <text x="550" y="290" text-anchor="middle" font-size="19" font-weight="800" fill="#43301F" font-family="Fredoka">3. Montanha</text>
-        </g>
-        <g>
-          <path d="M660 250 L706 130 L740 190 L780 96 L824 250 Z" fill="#7FA254" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
-          <path d="M765 130 L780 96 L794 130 L786 137 L780 126 L773 136 Z" fill="#fff" stroke="#43301F" stroke-width="3.2" stroke-linejoin="round"/>
-          <text x="742" y="290" text-anchor="middle" font-size="19" font-weight="800" fill="#43301F" font-family="Fredoka">4. Cordilheira</text>
-        </g>
-      </svg>
-      <div class="tipos" id="tipos"></div>
-      <div class="nota"><i data-lucide="lightbulb" style="width:22px;height:22px;color:#8A6A1B;flex:0 0 auto"></i>
-        <span>Ninguém pega uma régua para medir e decidir o nome de cada um: essas palavras são <b>valores relativos</b>, ou seja, dependem do tamanho umas das outras!</span></div>
-    </div>
-  </section>
+    <!-- ============ PARTE 3 : OS 19 MONTES ============ -->
+    <section id="montes19">
+      <div class="sec-head reveal">
+        <span class="sec-tag"><i data-lucide="book-open" style="width:14px;height:14px"></i> Parte 3</span>
+        <h2>Os 19 montes da Bíblia</h2>
+        <p>Cada cartão mostra o nome, o que ele significa, onde fica e a história que aconteceu ali. Boa viagem!</p>
+      </div>
 
-  <!-- ============ PARTE 3 : OS 19 MONTES ============ -->
-  <section id="montes19">
-    <div class="sec-head reveal">
-      <span class="sec-tag"><i data-lucide="book-open" style="width:14px;height:14px"></i> Parte 3</span>
-      <h2>Os 19 montes da Bíblia</h2>
-      <p>Cada cartão mostra o nome, o que ele significa, onde fica e a história que aconteceu ali. Boa viagem!</p>
-    </div>
+      <div class="aviso reveal">
+        <i data-lucide="info" style="width:28px;height:28px"></i>
+        <span>Atenção, explorador: o monte <b>Horebe</b> e o monte <b>Sinai</b> são <b>o mesmo lugar</b>, com dois nomes diferentes! Horebe é a cordilheira inteira, e Sinai é o pico mais famoso dela.</span>
+      </div>
 
-    <div class="aviso reveal">
-      <i data-lucide="info" style="width:28px;height:28px"></i>
-      <span>Atenção, explorador: o monte <b>Horebe</b> e o monte <b>Sinai</b> são <b>o mesmo lugar</b>, com dois nomes diferentes! Horebe é a cordilheira inteira, e Sinai é o pico mais famoso dela.</span>
-    </div>
+      <div class="grade" id="gradeMontes"></div>
+    </section>
 
-    <div class="grade" id="gradeMontes"></div>
-  </section>
+    <!-- ============ PARTE 4 : QUIZ ============ -->
+    <section id="quiz">
+      <div class="sec-head reveal">
+        <span class="sec-tag"><i data-lucide="trophy" style="width:14px;height:14px"></i> Parte 4</span>
+        <h2>Desafio do Explorador</h2>
+        <p>5 perguntas, cada acerto vale <b>1 ponto</b>. O desafio só pode ser feito <b>uma vez</b> — e o resultado fica guardado!</p>
+      </div>
+      <div class="quiz-wrap reveal">
+        <div class="quiz-card" id="quizBox"></div>
+      </div>
+    </section>
+  </main>
 
-  <!-- ============ PARTE 4 : QUIZ ============ -->
-  <section id="quiz">
-    <div class="sec-head reveal">
-      <span class="sec-tag"><i data-lucide="trophy" style="width:14px;height:14px"></i> Parte 4</span>
-      <h2>Desafio do Explorador</h2>
-      <p>5 perguntas, cada acerto vale <b>1 ponto</b>. O desafio só pode ser feito <b>uma vez</b> — e o resultado fica guardado!</p>
-    </div>
-    <div class="quiz-wrap reveal">
-      <div class="quiz-card" id="quizBox"></div>
-    </div>
-  </section>
-</main>
-
-<!-- ============ RODAPÉ TRANSPARENTE ============ -->
-<footer>
-  <p class="verse">“Vinde, subamos ao monte do Senhor!”</p>
-  <p class="ref">Isaías 2:3</p>
-  <p class="note">Com <b>Professora Debora Vezetiv</b> • Escola Bíblica Infantil • Planaltos, montes e montanhas das Terras Bíblicas</p>
-</footer>
+</div><!-- /.pagina -->
 
 <script>
+/* ============ BLOQUEIO DE SELEÇÃO (reforço p/ navegadores antigos) ============ */
+document.addEventListener('selectstart', function(e){ e.preventDefault(); });
+document.addEventListener('contextmenu', function(e){ e.preventDefault(); }); // sem menu de copar
+document.addEventListener('dragstart',  function(e){ e.preventDefault(); });
+
 /* ================= DADOS ================= */
 var CORES = ['c0','c1','c2','c3','c4'];
 
@@ -555,7 +556,6 @@ var QUIZ = [
 
 /* ================= RENDERIZAR CARTÕES ================= */
 var $ = function(s){ return document.querySelector(s); };
-
 function fmt(n){ return n.toLocaleString('pt-BR'); }
 
  $('#gradePlanaltos').innerHTML = PLANALTOS.map(function(p,i){
@@ -766,9 +766,7 @@ function mostrarResultadoSalvo(salvo){
 /* ================= ANIMAÇÃO SUAVE AO ROLAR (à prova de falhas) ================= */
 (function(){
   var elementos = document.querySelectorAll('.reveal');
-  if(!('IntersectionObserver' in window)){
-    return; // sem animação = tudo visível
-  }
+  if(!('IntersectionObserver' in window)){ return; }
   try{
     var obs = new IntersectionObserver(function(es){
       es.forEach(function(e){
@@ -776,7 +774,7 @@ function mostrarResultadoSalvo(salvo){
       });
     },{threshold:0, rootMargin:'0px 0px 60px 0px'});
     elementos.forEach(function(el){ obs.observe(el); });
-  }catch(err){ /* qualquer erro = sem animação = tudo visível */ }
+  }catch(err){ /* sem animação = tudo visível */ }
 })();
 
 quizBoasVindas();
