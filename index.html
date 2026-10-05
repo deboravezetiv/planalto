@@ -21,17 +21,36 @@
   html{scroll-behavior:smooth}
   body{
     font-family:'Nunito',sans-serif;color:var(--ink);
-    background-color:var(--paper);
+    background-color:var(--paper); /* só aparece enquanto a foto carrega */
     line-height:1.6;font-size:1.02rem;
     overflow-x:hidden;
     -webkit-text-size-adjust:100%;
     -webkit-tap-highlight-color:transparent;
   }
-  /* WALLPAPER planalto.jpg — técnica compatível com celular */
-  body::before{
-    content:"";position:fixed;inset:0;z-index:-1;
+
+  /* ============ WALLPAPER planalto.jpg — 100% TRAVADO ============
+     • position:fixed   → a camada NUNCA se move ao rolar;
+     • height:100lvh    → usa a MAIOR viewport do celular, então o
+                          tamanho da foto fica SEMPRE igual, mesmo
+                          quando a barra de endereço some/aparece
+                          (era isso que fazia a imagem "andar/zoomar");
+     • translateZ(0)    → promove a foto a camada de GPU: zero
+                          tremedeira durante a rolagem;
+     • pointer-events:none → nunca atrapalha toques e cliques. */
+  .fundo-fixo{
+    position:fixed;
+    top:50%; left:50%;
+    width:100vw;
+    height:100vh;   /* fallback para navegadores antigos */
+    height:100lvh;  /* tamanho constante no celular */
+    -webkit-transform:translate(-50%,-50%) translateZ(0);
+    transform:translate(-50%,-50%) translateZ(0);
+    backface-visibility:hidden;
     background:url('planalto.jpg') center center / cover no-repeat;
+    z-index:-1;
+    pointer-events:none;
   }
+
   h1,h2,h3,h4{font-family:'Fredoka',sans-serif;line-height:1.2;
     text-shadow:0 1px 0 rgba(255,255,255,.95), 0 0 12px rgba(255,255,255,.95), 0 0 26px rgba(255,255,255,.7)}
   i[data-lucide], svg.lucide{vertical-align:-3px}
@@ -68,8 +87,13 @@
   .sec-head p{color:var(--ink);font-weight:800}
 
   .panel{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:24px}
-  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease}
-  .reveal.on{opacity:1;transform:none}
+  /* Animação de entrada: em telas pequenas fica DESLIGADA por padrão
+     (garante que nada fique invisível); o JS liga de novo em telas grandes */
+  .reveal{transition:opacity .7s ease, transform .7s ease}
+  @media(min-width:900px){
+    .reveal{opacity:0;transform:translateY(24px)}
+    .reveal.on{opacity:1;transform:none}
+  }
 
   /* ---------- Planaltos ---------- */
   .duas-colunas{display:grid;grid-template-columns:1.05fr 1fr;gap:24px;align-items:center;margin-bottom:40px}
@@ -199,9 +223,7 @@
   footer .note{margin-top:14px;font-size:.85rem}
   footer .note b{color:var(--green-d)}
 
-  /* ============ VIDRO FOSCO (transparente meio borrado) ============
-     Fallback primeiro (fundo mais claro, sem blur) para navegadores
-     antigos; em seguida o efeito de vidro para os modernos.          */
+  /* ============ VIDRO FOSCO (transparente meio borrado) ============ */
   .panel,.pcard,.mcard,.tcard,.quiz-card,.aviso,.nota,.kicker,.prof-name,.tag,
   .pts-badge,.unico-badge,.salvo-badge,.malt,.cena-caps .cap,.quiz-fb,.btn,.opt{
     background:rgba(255,252,243,.88);
@@ -223,7 +245,6 @@
       -webkit-backdrop-filter:blur(8px);
       backdrop-filter:blur(8px);
     }
-    /* mantém o feedback colorido translúcido das respostas */
     .opt.right{background:rgba(95,143,62,.34)}
     .opt.wrong{background:rgba(196,85,59,.34)}
   }
@@ -268,6 +289,9 @@
 </style>
 </head>
 <body>
+
+<!-- Camada do papel de parede: fixa, travada e fora do fluxo da página -->
+<div class="fundo-fixo" aria-hidden="true"></div>
 
 <!-- ============ TOPO (transparente sobre a foto) ============ -->
 <header class="topo" id="inicio">
@@ -416,7 +440,7 @@
       <span>Atenção, explorador: o monte <b>Horebe</b> e o monte <b>Sinai</b> são <b>o mesmo lugar</b>, com dois nomes diferentes! Horebe é a cordilheira inteira, e Sinai é o pico mais famoso dela.</span>
     </div>
 
-    <div class="grade reveal" id="gradeMontes"></div>
+    <div class="grade" id="gradeMontes"></div>
   </section>
 
   <!-- ============ PARTE 4 : QUIZ ============ -->
@@ -441,9 +465,9 @@
 
 <script>
 /* ================= DADOS ================= */
-const CORES = ['c0','c1','c2','c3','c4'];
+var CORES = ['c0','c1','c2','c3','c4'];
 
-const PLANALTOS = [
+var PLANALTOS = [
   {n:'Planalto Central',    d:'É o grupo dos três: reúne os planaltos de Naftali, Efraim e Judá.'},
   {n:'Planalto de Naftali', d:'Fica ao norte da Galileia, no comecinho da terra.'},
   {n:'Planalto de Efraim',  d:'Fica bem no centro da Samaria.'},
@@ -454,14 +478,14 @@ const PLANALTOS = [
   {n:'Planalto de Moabe',   d:'É cheio de pedras, mas tem ótimas pastagens para os animais. Vai do rio Jordão e do Mar Morto até o rio Amom.'}
 ];
 
-const TIPOS = [
+var TIPOS = [
   {t:'Outeiro',     d:'É a elevação mais pequenina — menor que um monte. Uma colininha!'},
   {t:'Monte',       d:'É uma elevação natural de terra, maior que o outeiro.'},
   {t:'Montanha',    d:'É parecida com o monte, só que mais alta!'},
   {t:'Cordilheira', d:'É uma fileira de várias montanhas, uma atrás da outra!'}
 ];
 
-const MONTES = [
+var MONTES = [
   {nome:'Ararate', sig:'terra sagrada', loc:'Bem longe, na Armênia', ref:'Gênesis 8:4', altura:5610,
    txt:'É o <b>monte mais alto</b> da nossa lista e fica bem longe, onde nascem os rios Eufrates, Tigre e Aras. Foi <b>sobre os montes de Ararate que a Arca de Noé pousou</b> depois do grande dilúvio!'},
   {nome:'Abarim', sig:'do outro lado', loc:'Moabe, em frente a Jericó', ref:'Números 33:47', altura:null,
@@ -503,7 +527,7 @@ const MONTES = [
 ];
 
 /* ================= QUIZ (5 perguntas, 1 ponto cada) ================= */
-const QUIZ = [
+var QUIZ = [
   {q:'Um planalto é...',
    opts:['Uma terra grande, elevada, com topo mais ou menos plano e cortada por vales',
          'Um buraco bem fundo no chão',
@@ -530,56 +554,46 @@ const QUIZ = [
 ];
 
 /* ================= RENDERIZAR CARTÕES ================= */
-const $ = s => document.querySelector(s);
+var $ = function(s){ return document.querySelector(s); };
 
- $('#gradePlanaltos').innerHTML = PLANALTOS.map((p,i)=>`
-  <div class="pcard">
-    <span class="pnum ${CORES[i%5]}">${i+1}</span>
-    <div><h3>${p.n}</h3><p>${p.d}</p></div>
-  </div>`).join('');
+function fmt(n){ return n.toLocaleString('pt-BR'); }
 
- $('#tipos').innerHTML = TIPOS.map((t,i)=>`
-  <div class="tcard">
-    <span class="tn">${i+1}</span>
-    <h4>${t.t}</h4><p>${t.d}</p>
-  </div>`).join('');
+ $('#gradePlanaltos').innerHTML = PLANALTOS.map(function(p,i){
+  return '<div class="pcard"><span class="pnum '+CORES[i%5]+'">'+(i+1)+'</span><div><h3>'+p.n+'</h3><p>'+p.d+'</p></div></div>';
+}).join('');
 
- $('#gradeMontes').innerHTML = MONTES.map((m,i)=>{
-  const alt = m.altura
-    ? `<div class="malt"><i data-lucide="ruler" style="width:18px;height:18px"></i>
-         ${m.altura.toLocaleString('pt-BR')} m de altura — como <b>${Math.round(m.altura/5.5).toLocaleString('pt-BR')}&nbsp;girafas</b> empilhadas!</div>`
+ $('#tipos').innerHTML = TIPOS.map(function(t,i){
+  return '<div class="tcard"><span class="tn">'+(i+1)+'</span><h4>'+t.t+'</h4><p>'+t.d+'</p></div>';
+}).join('');
+
+ $('#gradeMontes').innerHTML = MONTES.map(function(m,i){
+  var alt = m.altura
+    ? '<div class="malt"><i data-lucide="ruler" style="width:18px;height:18px"></i>'+
+      fmt(m.altura)+' m de altura — como <b>'+fmt(Math.round(m.altura/5.5))+'&nbsp;girafas</b> empilhadas!</div>'
     : '';
-  const sig = m.sig
-    ? `<span class="tag"><i data-lucide="sparkles" style="width:13px;height:13px"></i> Significa: “${m.sig}”</span>`
+  var sig = m.sig
+    ? '<span class="tag"><i data-lucide="sparkles" style="width:13px;height:13px"></i> Significa: “'+m.sig+'”</span>'
     : '';
-  return `
-  <article class="mcard">
-    <div class="mhead">
-      <span class="mnum ${CORES[i%5]}">${i+1}</span>
-      <h3>${m.nome}</h3>
-    </div>
-    <div class="mtags">
-      ${sig}
-      <span class="tag"><i data-lucide="map-pin" style="width:13px;height:13px"></i> ${m.loc}</span>
-      <span class="tag"><i data-lucide="book-open" style="width:13px;height:13px"></i> ${m.ref}</span>
-    </div>
-    ${alt}
-    <p class="txt">${m.txt}</p>
-  </article>`;
+  return '<article class="mcard"><div class="mhead"><span class="mnum '+CORES[i%5]+'">'+(i+1)+'</span><h3>'+m.nome+'</h3></div>'+
+    '<div class="mtags">'+sig+
+    '<span class="tag"><i data-lucide="map-pin" style="width:13px;height:13px"></i> '+m.loc+'</span>'+
+    '<span class="tag"><i data-lucide="book-open" style="width:13px;height:13px"></i> '+m.ref+'</span></div>'+
+    alt+'<p class="txt">'+m.txt+'</p></article>';
 }).join('');
 
 /* ================= CONFETE ================= */
-const CORES_CONF = ['#F2B63C','#C4553B','#5F8F3E','#3E8E9E','#E0813C'];
-function confete(n=44){
-  for(let i=0;i<n;i++){
-    const d=document.createElement('div');
+var CORES_CONF = ['#F2B63C','#C4553B','#5F8F3E','#3E8E9E','#E0813C'];
+function confete(n){
+  n = n || 44;
+  for(var i=0;i<n;i++){
+    var d=document.createElement('div');
     d.className='confetti';
-    const s=8+Math.random()*10;
-    d.style.cssText=`left:${Math.random()*100}vw;width:${s}px;height:${s*(Math.random()>.5?1:.6)}px;
-      background:${CORES_CONF[i%CORES_CONF.length]};border-radius:${Math.random()>.5?'50%':'3px'};
-      animation-duration:${2.4+Math.random()*1.8}s;animation-delay:${Math.random()*.7}s`;
+    var s=8+Math.random()*10;
+    d.style.cssText='left:'+(Math.random()*100)+'vw;width:'+s+'px;height:'+(s*(Math.random()>.5?1:.6))+'px;'+
+      'background:'+CORES_CONF[i%CORES_CONF.length]+';border-radius:'+(Math.random()>.5?'50%':'3px')+';'+
+      'animation-duration:'+(2.4+Math.random()*1.8)+'s;animation-delay:'+(Math.random()*.7)+'s';
     document.body.appendChild(d);
-    setTimeout(()=>d.remove(),5200);
+    setTimeout(function(el){ return function(){ el.remove(); }; }(d),5200);
   }
 }
 
@@ -587,11 +601,11 @@ function confete(n=44){
    O desafio só pode ser feito UMA VEZ. Ao concluir, o
    resultado é salvo no navegador e nunca mais há como
    refazer — sempre que a página abrir, aparece o resultado. */
-const QUIZ_KEY = 'quiz-terras-biblicas-v1';
-let memoriaQuiz = null; // reserva caso o navegador bloqueie o localStorage
+var QUIZ_KEY = 'quiz-terras-biblicas-v1';
+var memoriaQuiz = null;
 
 function salvarResultado(){
-  const dados = {
+  var dados = {
     pontos: qScore,
     marcas: qMarks,
     data  : new Date().toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric'})
@@ -602,20 +616,20 @@ function salvarResultado(){
 function carregarResultado(){
   if(memoriaQuiz) return memoriaQuiz;
   try{
-    const d = JSON.parse(localStorage.getItem(QUIZ_KEY));
+    var d = JSON.parse(localStorage.getItem(QUIZ_KEY));
     if(d) memoriaQuiz = d;
     return d;
   }catch(e){ return null; }
 }
 
 /* ================= LÓGICA DO QUIZ ================= */
-const quizBox = $('#quizBox');
-const TOTAL_PTS = QUIZ.length; // 5 pontos
-let qIdx=0, qScore=0, qOrdem=[], qMarks=[];
+var quizBox = $('#quizBox');
+var TOTAL_PTS = QUIZ.length;
+var qIdx=0, qScore=0, qOrdem=[], qMarks=[];
 
 function embaralhar(a){
-  const b=[...a];
-  for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; }
+  var b=a.slice();
+  for(var i=b.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=b[i]; b[i]=b[j]; b[j]=t; }
   return b;
 }
 
@@ -630,85 +644,83 @@ function calcEstrelas(pontos){
 }
 
 function quizBoasVindas(){
-  const salvo = carregarResultado();
+  var salvo = carregarResultado();
   if(salvo){ mostrarResultadoSalvo(salvo); return; }
 
-  quizBox.innerHTML = `
-    <div style="text-align:center">
-      <div class="trophy" style="width:80px;height:80px;margin:0 auto 14px">
-        <i data-lucide="flag" style="width:38px;height:38px;color:#8A6A1B"></i>
-      </div>
-      <h3 style="font-size:1.45rem;margin-bottom:8px">Pronto para o desafio?</h3>
-      <p style="font-weight:800;max-width:440px;margin:0 auto 6px">
-        5 perguntas, cada acerto vale <b>1 ponto</b>.</p>
-      <span class="unico-badge">
-        <i data-lucide="lock" style="width:14px;height:14px"></i>
-        Atenção: você só pode responder <b>uma vez</b>!
-      </span>
-      <div style="margin-top:16px">
-        <button class="btn green" id="qstart">
-          <i data-lucide="play" style="width:17px;height:17px"></i> Começar o desafio
-        </button>
-      </div>
-    </div>`;
+  quizBox.innerHTML =
+    '<div style="text-align:center">'+
+      '<div class="trophy" style="width:80px;height:80px;margin:0 auto 14px">'+
+        '<i data-lucide="flag" style="width:38px;height:38px;color:#8A6A1B"></i></div>'+
+      '<h3 style="font-size:1.45rem;margin-bottom:8px">Pronto para o desafio?</h3>'+
+      '<p style="font-weight:800;max-width:440px;margin:0 auto 6px">5 perguntas, cada acerto vale <b>1 ponto</b>.</p>'+
+      '<span class="unico-badge"><i data-lucide="lock" style="width:14px;height:14px"></i>'+
+      ' Atenção: você só pode responder <b>uma vez</b>!</span>'+
+      '<div style="margin-top:16px"><button class="btn green" id="qstart">'+
+      '<i data-lucide="play" style="width:17px;height:17px"></i> Começar o desafio</button></div>'+
+    '</div>';
   if(window.lucide) lucide.createIcons();
   $('#qstart').addEventListener('click', quizIniciar);
 }
 
 function quizIniciar(){
   qIdx=0; qScore=0; qMarks=[];
-  qOrdem = QUIZ.map(q=>embaralhar(q.opts.map((t,i)=>({t,certo:i===q.resp}))));
+  qOrdem = QUIZ.map(function(q){
+    return embaralhar(q.opts.map(function(t,i){ return {t:t, certo:i===q.resp}; }));
+  });
   quizRender();
 }
 
 function quizRender(){
-  const q = QUIZ[qIdx];
-  quizBox.innerHTML = `
-    <div class="quiz-top">
-      <span class="quiz-count">Pergunta ${qIdx+1} de ${QUIZ.length}</span>
-      <span class="quiz-dots">${QUIZ.map((_,i)=>
-        `<i class="${qMarks[i]===true?'ok':qMarks[i]===false?'bad':i===qIdx?'now':''}"></i>`).join('')}</span>
-    </div>
-    <span class="pts-badge"><i data-lucide="star" style="width:14px;height:14px"></i> Acertou = 1 ponto</span>
-    <p class="quiz-q">${q.q}</p>
-    <div class="opts" id="opts">
-      ${qOrdem[qIdx].map((o,i)=>`
-        <button class="opt" data-i="${i}"><span class="letter">${'ABCD'[i]}</span>${o.t}</button>`).join('')}
-    </div>
-    <div class="quiz-fb" id="qfb"></div>
-    <div class="quiz-act" id="qact">
-      <button class="btn green" id="qnext">${qIdx===QUIZ.length-1?'Ver meu resultado':'Próxima pergunta'} <i data-lucide="arrow-right" style="width:17px;height:17px"></i></button>
-    </div>`;
+  var q = QUIZ[qIdx];
+  var dots = QUIZ.map(function(_,i){
+    var c = qMarks[i]===true ? 'ok' : qMarks[i]===false ? 'bad' : (i===qIdx ? 'now' : '');
+    return '<i class="'+c+'"></i>';
+  }).join('');
+  var opts = qOrdem[qIdx].map(function(o,i){
+    return '<button class="opt" data-i="'+i+'"><span class="letter">'+'ABCD'[i]+'</span>'+o.t+'</button>';
+  }).join('');
+
+  quizBox.innerHTML =
+    '<div class="quiz-top"><span class="quiz-count">Pergunta '+(qIdx+1)+' de '+QUIZ.length+'</span>'+
+    '<span class="quiz-dots">'+dots+'</span></div>'+
+    '<span class="pts-badge"><i data-lucide="star" style="width:14px;height:14px"></i> Acertou = 1 ponto</span>'+
+    '<p class="quiz-q">'+q.q+'</p>'+
+    '<div class="opts" id="opts">'+opts+'</div>'+
+    '<div class="quiz-fb" id="qfb"></div>'+
+    '<div class="quiz-act" id="qact"><button class="btn green" id="qnext">'+
+    (qIdx===QUIZ.length-1?'Ver meu resultado':'Próxima pergunta')+
+    ' <i data-lucide="arrow-right" style="width:17px;height:17px"></i></button></div>';
   if(window.lucide) lucide.createIcons();
 
-  $('#opts').addEventListener('click', e=>{
-    const b = e.target.closest('.opt');
-    if(b) quizResponder(+b.dataset.i);
+  $('#opts').addEventListener('click', function(e){
+    var b = e.target.closest('.opt');
+    if(b) quizResponder(parseInt(b.dataset.i,10));
   });
-  $('#qnext').addEventListener('click', ()=>{
+  $('#qnext').addEventListener('click', function(){
     qIdx++;
     qIdx < QUIZ.length ? quizRender() : quizFinal();
   });
 }
 
 function quizResponder(i){
-  const certo = qOrdem[qIdx][i].certo;
+  var certo = qOrdem[qIdx][i].certo;
   qMarks[qIdx] = certo;
   if(certo) qScore++;
 
-  document.querySelectorAll('#opts .opt').forEach((b,j)=>{
-    b.disabled = true;
-    if(qOrdem[qIdx][j].certo) b.classList.add('right');
-    else if(j===i) b.classList.add('wrong');
-    else b.classList.add('dim');
-  });
+  var botoes = document.querySelectorAll('#opts .opt');
+  for(var j=0;j<botoes.length;j++){
+    botoes[j].disabled = true;
+    if(qOrdem[qIdx][j].certo) botoes[j].classList.add('right');
+    else if(j===i) botoes[j].classList.add('wrong');
+    else botoes[j].classList.add('dim');
+  }
 
-  const fb = $('#qfb');
+  var fb = $('#qfb');
   fb.className = 'quiz-fb show ' + (certo ? 'ok' : 'bad');
-  fb.innerHTML = `
-    <span class="fb-ico" style="background:${certo?'var(--green)':'var(--red)'}">
-      <i data-lucide="${certo?'check':'x'}" style="width:17px;height:17px"></i></span>
-    <span>${certo ? `<b>Isso mesmo! Você ganhou +1 ponto!</b> ` : `<b>Quase! Essa valia 1 ponto.</b> `}${QUIZ[qIdx].exp}</span>`;
+  fb.innerHTML =
+    '<span class="fb-ico" style="background:'+(certo?'var(--green)':'var(--red)')+'">'+
+    '<i data-lucide="'+(certo?'check':'x')+'" style="width:17px;height:17px"></i></span>'+
+    '<span>'+(certo ? '<b>Isso mesmo! Você ganhou +1 ponto!</b> ' : '<b>Quase! Essa valia 1 ponto.</b> ')+QUIZ[qIdx].exp+'</span>';
   $('#qact').classList.add('show');
   if(window.lucide) lucide.createIcons();
   if(certo) confete(14);
@@ -721,43 +733,51 @@ function quizFinal(){
 }
 
 function renderResultado(pontos, marcas, data, comemorar){
-  const estrelas = calcEstrelas(pontos);
-  quizBox.innerHTML = `
-    <div class="quiz-final">
-      <div class="trophy"><i data-lucide="trophy" style="width:46px;height:46px;color:#8A6A1B"></i></div>
-      <h3>Fim do desafio!</h3>
-      <div class="stars">${[0,1,2].map(i=>
-        `<i data-lucide="star" class="${i<estrelas?'lit':''}"></i>`).join('')}</div>
-      <p class="big-pts">${pontos}<span> / ${TOTAL_PTS} pontos</span></p>
-      <div class="mini-res">
-        ${marcas.map((m,i)=>`<span class="qchip ${m?'ok':'bad'}" title="Pergunta ${i+1}">${i+1}</span>`).join('')}
-      </div>
-      <p class="mini-res-leg">verde = acertou &nbsp;•&nbsp; vermelho = errou</p>
-      <p class="msg">${mensagemFinal(pontos)}</p>
-      <span class="salvo-badge">
-        <i data-lucide="save" style="width:15px;height:15px"></i>
-        Resultado salvo neste navegador
-      </span>
-      <p class="data-salva"><i data-lucide="calendar" style="width:13px;height:13px"></i> Feito em ${data}</p>
-      <div class="btns" style="margin-top:16px">
-        <a class="btn orange" href="#montes19"><i data-lucide="book-open" style="width:17px;height:17px"></i> Revisar os montes</a>
-      </div>
-    </div>`;
+  var estrelas = calcEstrelas(pontos);
+  var chips = marcas.map(function(m,i){
+    return '<span class="qchip '+(m?'ok':'bad')+'" title="Pergunta '+(i+1)+'">'+(i+1)+'</span>';
+  }).join('');
+  quizBox.innerHTML =
+    '<div class="quiz-final">'+
+      '<div class="trophy"><i data-lucide="trophy" style="width:46px;height:46px;color:#8A6A1B"></i></div>'+
+      '<h3>Fim do desafio!</h3>'+
+      '<div class="stars">'+[0,1,2].map(function(i){
+        return '<i data-lucide="star" class="'+(i<estrelas?'lit':'')+'"></i>'; }).join('')+'</div>'+
+      '<p class="big-pts">'+pontos+'<span> / '+TOTAL_PTS+' pontos</span></p>'+
+      '<div class="mini-res">'+chips+'</div>'+
+      '<p class="mini-res-leg">verde = acertou &nbsp;•&nbsp; vermelho = errou</p>'+
+      '<p class="msg">'+mensagemFinal(pontos)+'</p>'+
+      '<span class="salvo-badge"><i data-lucide="save" style="width:15px;height:15px"></i> Resultado salvo neste navegador</span>'+
+      '<p class="data-salva"><i data-lucide="calendar" style="width:13px;height:13px"></i> Feito em '+data+'</p>'+
+      '<div class="btns" style="margin-top:16px">'+
+        '<a class="btn orange" href="#montes19"><i data-lucide="book-open" style="width:17px;height:17px"></i> Revisar os montes</a>'+
+      '</div>'+
+    '</div>';
   if(window.lucide) lucide.createIcons();
   if(comemorar && estrelas>=2) confete(70);
 }
 
 function mostrarResultadoSalvo(salvo){
-  qScore = salvo.pontos ?? 0;
+  qScore = (salvo.pontos != null) ? salvo.pontos : 0;
   qMarks = Array.isArray(salvo.marcas) ? salvo.marcas : [];
   renderResultado(qScore, qMarks, salvo.data || '', false);
 }
 
-/* ================= ANIMAÇÃO SUAVE AO ROLAR ================= */
-const obs = new IntersectionObserver(es=>es.forEach(e=>{
-  if(e.isIntersecting){ e.target.classList.add('on'); obs.unobserve(e.target); }
-}),{threshold:.1});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+/* ================= ANIMAÇÃO SUAVE AO ROLAR (à prova de falhas) ================= */
+(function(){
+  var elementos = document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){
+    return; // sem animação = tudo visível
+  }
+  try{
+    var obs = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('on'); obs.unobserve(e.target); }
+      });
+    },{threshold:0, rootMargin:'0px 0px 60px 0px'});
+    elementos.forEach(function(el){ obs.observe(el); });
+  }catch(err){ /* qualquer erro = sem animação = tudo visível */ }
+})();
 
 quizBoasVindas();
 if(window.lucide) lucide.createIcons();
