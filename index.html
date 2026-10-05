@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>As Terras Bíblicas para Crianças — Planaltos e Montes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root{
+    --paper:#FAF1DC; --paper2:#F2E5C6; --card:#FFFCF3;
+    --ink:#43301F; --ink-soft:#7A6248;
+    --green:#5F8F3E; --green-d:#48702E; --orange:#E0813C; --teal:#3E8E9E;
+    --red:#C4553B; --sun:#F2B63C; --water:#8FC3D6;
+    --shadow:0 6px 0 rgba(67,48,31,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Nunito',sans-serif;color:var(--ink);
+    /* WALLPAPER: planalto.jpg aparece por completo, sem véu por cima.
+       A cor de fundo só serve de reserva caso a imagem não carregue. */
+    background-color:var(--paper);
+    background-image:url('planalto.jpg');
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+    background-repeat:no-repeat;
+    line-height:1.65;font-size:1.03rem;
+  }
+  h1,h2,h3,h4{font-family:'Fredoka',sans-serif;line-height:1.2}
+  i[data-lucide], svg.lucide{vertical-align:-3px}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+  section{padding:58px 0 20px;scroll-margin-top:20px}
+
+  /* ---------- Hero ---------- */
+  .hero-top{background:var(--water);border-bottom:4px solid var(--ink);overflow:hidden}
+  .hero-in{max-width:820px;margin:0 auto;padding:52px 20px 8px;text-align:center}
+  .kicker{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:3px solid var(--ink);
+    border-radius:999px;padding:7px 16px;font-weight:800;font-size:.85rem;box-shadow:var(--shadow)}
+  .hero-in h1{font-size:clamp(2rem,5.4vw,3.4rem);margin:18px 0 14px;text-shadow:0 3px 0 rgba(255,255,255,.65)}
+  .hero-in h1 .hl{color:var(--red)}
+  .prof-name{display:inline-flex;align-items:center;gap:9px;font-family:'Fredoka';font-weight:600;
+    font-size:1.12rem;background:var(--sun);border:3px solid var(--ink);border-radius:999px;
+    padding:8px 22px;margin-bottom:20px;box-shadow:var(--shadow)}
+  .hero-in p.intro{max-width:600px;margin:0 auto 24px;font-weight:700;color:#2E5A66;font-size:1.12rem}
+  .hero-ctas{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding-bottom:8px}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:.95rem;
+    color:var(--ink);background:var(--card);border:3px solid var(--ink);border-radius:14px;padding:11px 18px;
+    text-decoration:none;box-shadow:var(--shadow);transition:transform .15s;cursor:pointer}
+  .btn:hover{transform:translateY(-3px)}
+  .btn.green{background:var(--green);color:#fff}
+  .btn.orange{background:var(--orange);color:#fff}
+  .btn.sun{background:var(--sun)}
+  .cloud{animation:drift 30s linear infinite}
+  .cloud.c2{animation-duration:40s;animation-delay:-18s}
+  @keyframes drift{from{transform:translateX(-140px)}to{transform:translateX(1200px)}}
+  .bird{animation:bob 3s ease-in-out infinite}
+  .bird.b2{animation-delay:-1.4s}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .sun-rays{transform-origin:center;animation:spin 44s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .divider{display:block;width:100%;height:auto}
+
+  /* ---------- Cabeçalhos de seção ----------
+     Texto direto sobre a foto: contorno luminoso leve
+     para continuar legível SEM cobrir a imagem.        */
+  .sec-head{max-width:700px;margin:0 auto 36px;text-align:center}
+  .sec-tag{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--paper);
+    font-family:'Fredoka';font-weight:600;font-size:.8rem;letter-spacing:.12em;padding:6px 16px;
+    border-radius:999px;text-transform:uppercase;box-shadow:0 3px 8px rgba(0,0,0,.25)}
+  .sec-head h2{font-size:clamp(1.7rem,4vw,2.4rem);margin:14px 0 8px;
+    text-shadow:0 1px 0 rgba(255,255,255,.9), 0 0 12px rgba(255,255,255,.85), 0 0 22px rgba(255,255,255,.6)}
+  .sec-head p{color:var(--ink);font-weight:800;
+    text-shadow:0 1px 0 rgba(255,255,255,.9), 0 0 10px rgba(255,255,255,.85), 0 0 18px rgba(255,255,255,.6)}
+
+  .panel{background:var(--card);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:26px}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease}
+  .reveal.on{opacity:1;transform:none}
+
+  /* ---------- Planaltos ---------- */
+  .duas-colunas{display:grid;grid-template-columns:1.05fr 1fr;gap:24px;align-items:center;margin-bottom:40px}
+  @media(max-width:820px){.duas-colunas{grid-template-columns:1fr}}
+  .big-quote{font-family:'Fredoka';font-weight:600;font-size:1.28rem;line-height:1.5}
+  .big-quote b{color:var(--green-d)}
+  .grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+  .pcard{background:var(--card);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);
+    padding:18px 20px 16px;display:flex;gap:14px;transition:transform .15s}
+  .pcard:hover{transform:translateY(-4px)}
+  .pnum{flex:0 0 auto;width:44px;height:44px;border-radius:50%;border:3px solid var(--ink);color:#fff;
+    display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:1.15rem;box-shadow:var(--shadow)}
+  .pcard h3{font-size:1.12rem;margin-bottom:3px}
+  .pcard p{font-weight:600;font-size:.93rem;color:var(--ink-soft)}
+
+  /* ---------- Relevos ---------- */
+  .cena-svg{width:100%;height:auto;display:block}
+  .cena-caps{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .cena-caps .cap{border:2px dashed var(--ink-soft);border-radius:14px;padding:10px 14px;font-weight:700;
+    font-size:.87rem;color:var(--ink-soft)}
+  .cena-caps .cap b{display:block;font-family:'Fredoka';color:var(--ink);font-size:1rem}
+  .tipos{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:22px}
+  .tcard{background:var(--paper2);border:3px solid var(--ink);border-radius:16px;padding:16px 18px}
+  .tcard .tn{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--sun);
+    border:3px solid var(--ink);font-family:'Fredoka';font-weight:700;margin-bottom:8px}
+  .tcard h4{font-size:1.1rem;margin-bottom:4px}
+  .tcard p{font-weight:600;font-size:.92rem;color:var(--ink-soft)}
+  .nota{margin-top:20px;display:inline-flex;align-items:flex-start;gap:10px;background:#FBE9A8;
+    border:3px solid var(--ink);border-radius:14px;padding:12px 16px;font-weight:800;font-size:.92rem;box-shadow:var(--shadow)}
+
+  /* ---------- Cartões dos montes ---------- */
+  .mcard{background:var(--card);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);
+    padding:20px 22px 16px;transition:transform .15s}
+  .mcard:hover{transform:translateY(-4px)}
+  .mhead{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .mnum{flex:0 0 auto;width:42px;height:42px;border-radius:14px;border:3px solid var(--ink);color:#fff;
+    display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:1.15rem;box-shadow:var(--shadow)}
+  .mhead h3{font-size:1.25rem}
+  .mtags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+  .tag{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--ink);border-radius:999px;
+    padding:3px 11px;font-weight:800;font-size:.75rem;background:var(--paper2)}
+  .tag.sig{background:#FBE9A8}
+  .tag.loc{background:#E4F0D2}
+  .tag.ref{background:var(--sun)}
+  .malt{display:flex;align-items:center;gap:8px;font-weight:800;font-size:.9rem;color:var(--teal);
+    background:#EAF4F7;border:2px dashed var(--teal);border-radius:12px;padding:8px 12px;margin-bottom:12px}
+  .mcard .txt{font-weight:600;font-size:.95rem;color:var(--ink-soft)}
+  .mcard .txt b{color:var(--ink)}
+  .aviso{display:flex;align-items:center;gap:14px;background:var(--sun);border:3px solid var(--ink);
+    border-radius:18px;padding:16px 20px;font-weight:800;box-shadow:var(--shadow);margin-bottom:26px}
+  .aviso i{flex:0 0 auto;color:#8A6A1B}
+  .c0{background:var(--green)} .c1{background:var(--orange)} .c2{background:var(--teal)}
+  .c3{background:var(--red)} .c4{background:#8A6A3B}
+
+  /* ---------- Quiz ---------- */
+  .quiz-wrap{max-width:680px;margin:0 auto}
+  .quiz-card{background:var(--card);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:28px}
+  .quiz-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .quiz-count{font-weight:800;color:var(--ink-soft);font-size:.9rem}
+  .quiz-dots{display:flex;gap:5px}
+  .quiz-dots i{width:11px;height:11px;border-radius:50%;border:2px solid var(--ink);background:var(--paper2)}
+  .quiz-dots i.ok{background:var(--green)}
+  .quiz-dots i.bad{background:var(--red)}
+  .quiz-dots i.now{background:var(--sun)}
+  .pts-badge{display:inline-flex;align-items:center;gap:6px;background:var(--sun);border:2px solid var(--ink);
+    border-radius:999px;padding:4px 13px;font-weight:800;font-size:.8rem;margin-bottom:12px}
+  .unico-badge{display:inline-flex;align-items:center;gap:6px;background:#F4D4CB;border:2px solid var(--red);
+    border-radius:999px;padding:4px 13px;font-weight:800;font-size:.8rem;margin-bottom:14px}
+  .quiz-q{font-family:'Fredoka';font-weight:600;font-size:1.25rem;margin-bottom:18px}
+  .opts{display:grid;gap:10px}
+  .opt{display:flex;align-items:center;gap:12px;text-align:left;background:var(--paper2);border:3px solid var(--ink);
+    border-radius:14px;padding:12px 16px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.98rem;
+    color:var(--ink);cursor:pointer;transition:transform .12s, background .12s}
+  .opt:hover:not(:disabled){transform:translateX(5px);background:var(--card)}
+  .opt .letter{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);
+    display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--card)}
+  .opt.right{background:#DDEDC8;border-color:var(--green-d)}
+  .opt.right .letter{background:var(--green);color:#fff;border-color:var(--green-d)}
+  .opt.wrong{background:#F4D4CB;border-color:var(--red)}
+  .opt.wrong .letter{background:var(--red);color:#fff}
+  .opt:disabled{cursor:default}
+  .opt.dim{opacity:.55}
+  .quiz-fb{display:none;margin-top:16px;gap:12px;align-items:flex-start;border-radius:14px;
+    padding:14px 16px;font-weight:700;border:3px solid var(--ink)}
+  .quiz-fb.show{display:flex}
+  .quiz-fb.ok{background:#E4F0D2}
+  .quiz-fb.bad{background:#F4D4CB}
+  .fb-ico{flex:0 0 auto;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+    border:2px solid var(--ink);color:#fff}
+  .quiz-act{display:none;margin-top:16px;justify-content:flex-end}
+  .quiz-act.show{display:flex}
+
+  /* ---------- Resultado ---------- */
+  .quiz-final{text-align:center}
+  .quiz-final .trophy{width:92px;height:92px;margin:4px auto 12px;border-radius:50%;background:var(--sun);
+    border:4px solid var(--ink);display:grid;place-items:center;box-shadow:var(--shadow)}
+  .salvo-badge{display:inline-flex;align-items:center;gap:7px;background:#E4F0D2;border:2px solid var(--green-d);
+    border-radius:999px;padding:5px 15px;font-weight:800;font-size:.82rem;color:var(--green-d);margin-bottom:10px}
+  .data-salva{font-weight:800;font-size:.85rem;color:var(--ink-soft);margin-top:6px}
+  .big-pts{font-family:'Fredoka';font-weight:700;font-size:2.6rem;color:var(--green-d);margin:10px 0 0}
+  .big-pts span{font-size:1.3rem;color:var(--ink-soft)}
+  .stars{display:flex;justify-content:center;gap:8px;margin:10px 0 4px}
+  .stars i{width:40px;height:40px;color:#D8CCAE}
+  .stars i.lit{color:var(--sun);animation:starpop .5s cubic-bezier(.34,1.7,.64,1) both}
+  .stars i.lit:nth-child(2){animation-delay:.18s}
+  .stars i.lit:nth-child(3){animation-delay:.36s}
+  @keyframes starpop{from{transform:scale(0) rotate(-40deg)}to{transform:scale(1) rotate(0)}}
+  .quiz-final h3{font-size:1.5rem;margin-bottom:4px}
+  .quiz-final .msg{font-weight:700;color:var(--ink-soft);margin-bottom:18px}
+  .quiz-final .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .mini-res{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:6px 0 16px}
+  .qchip{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;
+    border:2px solid var(--ink);font-family:'Fredoka';font-weight:700;color:#fff}
+  .qchip.ok{background:var(--green)}
+  .qchip.bad{background:var(--red)}
+  .mini-res-leg{font-weight:800;font-size:.78rem;color:var(--ink-soft);margin-bottom:14px}
+
+  /* Confete */
+  .confetti{position:fixed;top:-24px;z-index:300;pointer-events:none;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(112vh) rotate(760deg);opacity:.9}}
+
+  footer{margin-top:64px;border-top:4px solid var(--ink);background:var(--green-d);color:#F4ECD8;
+    text-align:center;padding:34px 20px}
+  footer .verse{font-family:'Fredoka';font-weight:600;font-size:1.25rem;margin-bottom:6px}
+  footer .ref{font-weight:800;font-size:.85rem;opacity:.85}
+  footer .note{margin-top:14px;font-size:.85rem;opacity:.9}
+  footer .note b{color:var(--sun)}
+</style>
+</head>
+<body>
+
+<!-- ============ TOPO ============ -->
+<div class="hero-top" id="inicio">
+  <div class="hero-in">
+    <span class="kicker"><i data-lucide="compass" style="width:16px;height:16px"></i> Escola Bíblica Infantil • Geografia da Bíblia</span>
+    <h1>As Terras Bíblicas: <span class="hl">Planaltos e Montes</span></h1>
+    <span class="prof-name"><i data-lucide="graduation-cap" style="width:20px;height:20px"></i> Professora Debora Vezetiv</span>
+    <p class="intro">Vamos viajar pela terra da Bíblia e conhecer os lugares famosos onde aconteceram histórias incríveis!</p>
+    <div class="hero-ctas">
+      <a class="btn green" href="#planaltos"><i data-lucide="footprints" style="width:18px;height:18px"></i> Planaltos</a>
+      <a class="btn orange" href="#relevos"><i data-lucide="mountain" style="width:18px;height:18px"></i> Montes</a>
+      <a class="btn sun" href="#montes19"><i data-lucide="book-open" style="width:18px;height:18px"></i> Os 19 montes</a>
+    </div>
+  </div>
+  <svg viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true" style="display:block;width:100%">
+    <circle cx="1180" cy="80" r="46" fill="#F2B63C" stroke="#43301F" stroke-width="5"/>
+    <g class="sun-rays" transform="translate(1180,80)" stroke="#F2B63C" stroke-width="8" stroke-linecap="round">
+      <line x1="0" y1="-74" x2="0" y2="-58"/><line x1="0" y1="58" x2="0" y2="74"/>
+      <line x1="-74" y1="0" x2="-58" y2="0"/><line x1="58" y1="0" x2="74" y2="0"/>
+    </g>
+    <g class="cloud" fill="#fff" stroke="#43301F" stroke-width="4">
+      <path d="M60 70 a24 24 0 0 1 46 -9 a20 20 0 0 1 36 7 a16 16 0 0 1 11 14 h-99 a16 16 0 0 1 6 -12z"/>
+    </g>
+    <g class="cloud c2" fill="#fff" stroke="#43301F" stroke-width="4" transform="scale(.7)">
+      <path d="M700 120 a24 24 0 0 1 46 -9 a20 20 0 0 1 36 7 a16 16 0 0 1 11 14 h-99 a16 16 0 0 1 6 -12z"/>
+    </g>
+    <g class="bird" stroke="#43301F" stroke-width="4" fill="none" stroke-linecap="round">
+      <path d="M260 80 q12 -12 24 0 q12 -12 24 0"/>
+    </g>
+    <g class="bird b2" stroke="#43301F" stroke-width="3.4" fill="none" stroke-linecap="round">
+      <path d="M400 46 q10 -10 20 0 q10 -10 20 0"/>
+    </g>
+    <path d="M-20 260 L200 110 L360 230 L520 90 L700 260 L1440 260 L1440 300 L-20 300 Z" fill="#B9CE93"/>
+    <path d="M420 260 L660 70 L880 230 L1040 120 L1280 260 L1440 260 L1440 300 L420 300 Z" fill="#7FA254" stroke="#43301F" stroke-width="5"/>
+    <path d="M632 112 L660 70 L686 110 L672 118 L660 104 L646 116 Z" fill="#fff" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M-20 260 L130 170 L280 260 Z" fill="#9CB874" stroke="#43301F" stroke-width="5"/>
+    <rect x="-20" y="258" width="1480" height="46" fill="#5F8F3E" stroke="#43301F" stroke-width="5"/>
+    <g transform="translate(660,70)">
+      <line x1="0" y1="0" x2="0" y2="-40" stroke="#43301F" stroke-width="5" stroke-linecap="round"/>
+      <path d="M0 -40 L34 -31 L0 -22 Z" fill="#C4553B" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
+    </g>
+  </svg>
+</div>
+
+<svg class="divider" viewBox="0 0 1440 42" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0 42 L70 12 L130 32 L200 6 L270 34 L340 10 L410 32 L480 8 L550 34 L620 12 L690 32 L760 6 L830 34 L900 10 L970 32 L1040 8 L1110 34 L1180 12 L1250 32 L1320 8 L1390 34 L1440 14 L1440 42 Z" fill="#FAF1DC"/>
+</svg>
+
+<main class="wrap">
+
+  <!-- ============ PARTE 1 : PLANALTOS ============ -->
+  <section id="planaltos">
+    <div class="sec-head reveal">
+      <span class="sec-tag"><i data-lucide="footprints" style="width:14px;height:14px"></i> Parte 1</span>
+      <h2>O que é um planalto?</h2>
+    </div>
+
+    <div class="duas-colunas reveal">
+      <div class="panel">
+        <p class="big-quote">Um <b>planalto</b> é uma <b>terra bem grande</b> que fica <b>levantada</b>, com o topo <b>mais ou menos plano</b>, e que é <b>cortada por vales</b> encaixados nela.</p>
+        <p style="margin-top:12px;font-weight:700;color:var(--ink-soft)">Imagine uma <b>mesa gigante feita de terra</b>: o tampo é o planalto, e os vales são como cortes fundos feitos nas suas laterais, por onde passam os rios.</p>
+      </div>
+      <div class="panel" style="padding:14px">
+        <svg class="cena-svg" viewBox="0 0 520 250" aria-label="Desenho mostrando o perfil de um planalto">
+          <circle cx="452" cy="48" r="26" fill="#F2B63C" stroke="#43301F" stroke-width="4"/>
+          <path d="M30 40 a16 16 0 0 1 30 -6 a14 14 0 0 1 24 5 a11 11 0 0 1 8 10 h-66 a11 11 0 0 1 4 -9z" fill="#fff" stroke="#43301F" stroke-width="3.6"/>
+          <path d="M10 96 H240 L280 168 L320 96 H510 V240 H10 Z" fill="#C9A86B" stroke="#43301F" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M10 96 H240 L280 168 L320 96" fill="none" stroke="#5F8F3E" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M272 190 C 280 205 272 218 280 232" fill="none" stroke="#6FAEC6" stroke-width="9" stroke-linecap="round"/>
+          <line x1="120" y1="60" x2="120" y2="88" stroke="#43301F" stroke-width="3" stroke-dasharray="5 5"/>
+          <text x="120" y="50" text-anchor="middle" font-size="15" font-weight="800" fill="#43301F" font-family="Nunito">topo plano e elevado</text>
+          <line x1="395" y1="150" x2="316" y2="150" stroke="#43301F" stroke-width="3" stroke-dasharray="5 5"/>
+          <text x="400" y="142" font-size="15" font-weight="800" fill="#43301F" font-family="Nunito">vale encaixado</text>
+          <line x1="352" y1="214" x2="296" y2="200" stroke="#43301F" stroke-width="3" stroke-dasharray="5 5"/>
+          <text x="356" y="222" font-size="15" font-weight="800" fill="#43301F" font-family="Nunito">rio no vale</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="sec-head reveal" style="margin-bottom:24px">
+      <h2 style="font-size:1.5rem">Os 8 planaltos das Terras Bíblicas</h2>
+    </div>
+    <div class="grade reveal" id="gradePlanaltos"></div>
+  </section>
+
+  <!-- ============ PARTE 2 : MONTES ============ -->
+  <section id="relevos">
+    <div class="sec-head reveal">
+      <span class="sec-tag"><i data-lucide="mountain" style="width:14px;height:14px"></i> Parte 2</span>
+      <h2>Por que os montes eram tão importantes?</h2>
+    </div>
+
+    <div class="duas-colunas reveal">
+      <div class="panel">
+        <p style="font-weight:600;color:var(--ink-soft)">Quando o povo de Israel morou no <b>Egito</b>, a terra era bem <b>plana</b> e <b>quase não chovia</b>. Mas quando chegaram em <b>Canaã</b>, tudo mudou: o lugar era cheio de <b>montes</b>, chovia <b>bem bastante</b> e a terra era <b>ótima para plantar</b>!</p>
+        <p style="margin-top:12px;font-weight:600;color:var(--ink-soft)">Por isso, do livro de <b>Êxodo</b> para frente, os montes aparecem em <b>todas as lembranças do povo de Israel</b>. E eles tinham um truque esperto: construíam suas <b>cidades no alto dos montes</b> para ficarem <b>protegidos</b> dos inimigos!</p>
+        <div class="cena-caps">
+          <div class="cap"><b>Egito</b>terras planas, quase sem chuva</div>
+          <div class="cap"><b>Canaã</b>montes, chuva e terra fértil</div>
+        </div>
+      </div>
+      <div class="panel" style="padding:14px">
+        <svg class="cena-svg" viewBox="0 0 560 250" aria-label="Comparação entre o Egito plano e Canaã montanhosa">
+          <rect width="560" height="250" rx="12" fill="#F2E5C6"/>
+          <line x1="280" y1="12" x2="280" y2="238" stroke="#43301F" stroke-width="3" stroke-dasharray="8 8"/>
+          <g stroke-linejoin="round">
+            <path d="M30 178 H250" stroke="#B08A4F" stroke-width="6" stroke-linecap="round"/>
+            <path d="M60 178 L110 92 L160 178 Z" fill="#D9B878" stroke="#43301F" stroke-width="4"/>
+            <path d="M140 178 L180 122 L220 178 Z" fill="#D9B878" stroke="#43301F" stroke-width="4"/>
+            <circle cx="222" cy="52" r="22" fill="#F2B63C" stroke="#43301F" stroke-width="4"/>
+            <g transform="translate(58,178)">
+              <path d="M0 0 C 2 -26 20 -30 20 -46" fill="none" stroke="#8A6A3B" stroke-width="5" stroke-linecap="round"/>
+              <path d="M20 -46 q-16 -12 -26 -2 q14 -2 20 8 q-2 -16 14 -20 q-14 0 -14 14" fill="#5F8F3E" stroke="#43301F" stroke-width="3.4"/>
+            </g>
+            <text x="140" y="216" text-anchor="middle" font-size="17" font-weight="800" fill="#43301F" font-family="Fredoka">EGITO</text>
+          </g>
+          <g stroke-linejoin="round">
+            <path d="M310 178 L370 92 L410 138 L455 74 L530 178" fill="#9CB874" stroke="#43301F" stroke-width="4.4"/>
+            <path d="M437 92 L455 74 L470 92 L462 98 L455 90 L447 97 Z" fill="#fff" stroke="#43301F" stroke-width="3.4"/>
+            <g transform="translate(455,52)">
+              <rect x="-20" y="0" width="12" height="16" fill="#E8D9AE" stroke="#43301F" stroke-width="3"/>
+              <rect x="-4" y="-6" width="12" height="22" fill="#E8D9AE" stroke="#43301F" stroke-width="3"/>
+              <rect x="12" y="2" width="10" height="14" fill="#E8D9AE" stroke="#43301F" stroke-width="3"/>
+              <path d="M-22 0 h36" stroke="#43301F" stroke-width="3"/>
+            </g>
+            <g transform="translate(340,52)">
+              <path d="M-26 8 a15 15 0 0 1 28 -6 a13 13 0 0 1 22 4 a10 10 0 0 1 7 9 h-60 a10 10 0 0 1 3 -7z" fill="#fff" stroke="#43301F" stroke-width="3.6"/>
+              <g stroke="#3E8E9E" stroke-width="4" stroke-linecap="round">
+                <line x1="-16" y1="24" x2="-18" y2="34"/><line x1="0" y1="26" x2="-2" y2="36"/><line x1="16" y1="24" x2="14" y2="34"/>
+              </g>
+            </g>
+            <text x="424" y="216" text-anchor="middle" font-size="17" font-weight="800" fill="#43301F" font-family="Fredoka">CANAÃ</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel reveal">
+      <h3 style="font-size:1.4rem;margin-bottom:8px">Outeiro, monte, montanha ou cordilheira?</h3>
+      <p style="font-weight:600;color:var(--ink-soft)">Essas palavras mostram o <b>tamanho</b> de cada elevação — do menor para o maior:</p>
+      <svg class="cena-svg" viewBox="0 0 860 300" aria-label="Comparação de tamanhos entre outeiro, monte, montanha e cordilheira" style="margin-top:14px">
+        <line x1="16" y1="252" x2="844" y2="252" stroke="#5F8F3E" stroke-width="9" stroke-linecap="round"/>
+        <g>
+          <path d="M60 250 Q140 196 220 250 Z" fill="#A9C57F" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
+          <text x="140" y="290" text-anchor="middle" font-size="19" font-weight="800" fill="#43301F" font-family="Fredoka">1. Outeiro</text>
+        </g>
+        <g>
+          <path d="M255 250 Q345 118 435 250 Z" fill="#7FA254" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
+          <text x="345" y="290" text-anchor="middle" font-size="19" font-weight="800" fill="#43301F" font-family="Fredoka">2. Monte</text>
+        </g>
+        <g>
+          <path d="M470 250 L550 84 L630 250 Z" fill="#B08A4F" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M531 118 L550 84 L569 118 L559 126 L550 114 L541 125 Z" fill="#fff" stroke="#43301F" stroke-width="3.4" stroke-linejoin="round"/>
+          <text x="550" y="290" text-anchor="middle" font-size="19" font-weight="800" fill="#43301F" font-family="Fredoka">3. Montanha</text>
+        </g>
+        <g>
+          <path d="M660 250 L706 130 L740 190 L780 96 L824 250 Z" fill="#7FA254" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M765 130 L780 96 L794 130 L786 137 L780 126 L773 136 Z" fill="#fff" stroke="#43301F" stroke-width="3.2" stroke-linejoin="round"/>
+          <text x="742" y="290" text-anchor="middle" font-size="19" font-weight="800" fill="#43301F" font-family="Fredoka">4. Cordilheira</text>
+        </g>
+      </svg>
+      <div class="tipos" id="tipos"></div>
+      <div class="nota"><i data-lucide="lightbulb" style="width:22px;height:22px;color:#8A6A1B;flex:0 0 auto"></i>
+        <span>Ninguém pega uma régua para medir e decidir o nome de cada um: essas palavras são <b>valores relativos</b>, ou seja, dependem do tamanho umas das outras!</span></div>
+    </div>
+  </section>
+
+  <!-- ============ PARTE 3 : OS 19 MONTES ============ -->
+  <section id="montes19">
+    <div class="sec-head reveal">
+      <span class="sec-tag"><i data-lucide="book-open" style="width:14px;height:14px"></i> Parte 3</span>
+      <h2>Os 19 montes da Bíblia</h2>
+      <p>Cada cartão mostra o nome, o que ele significa, onde fica e a história que aconteceu ali. Boa viagem!</p>
+    </div>
+
+    <div class="aviso reveal">
+      <i data-lucide="info" style="width:28px;height:28px"></i>
+      <span>Atenção, explorador: o monte <b>Horebe</b> e o monte <b>Sinai</b> são <b>o mesmo lugar</b>, com dois nomes diferentes! Horebe é a cordilheira inteira, e Sinai é o pico mais famoso dela.</span>
+    </div>
+
+    <div class="grade reveal" id="gradeMontes"></div>
+  </section>
+
+  <!-- ============ PARTE 4 : QUIZ ============ -->
+  <section id="quiz">
+    <div class="sec-head reveal">
+      <span class="sec-tag"><i data-lucide="trophy" style="width:14px;height:14px"></i> Parte 4</span>
+      <h2>Desafio do Explorador</h2>
+      <p>5 perguntas, cada acerto vale <b>1 ponto</b>. O desafio só pode ser feito <b>uma vez</b> — e o resultado fica guardado!</p>
+    </div>
+    <div class="quiz-wrap reveal">
+      <div class="quiz-card" id="quizBox"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p class="verse">“Vinde, subamos ao monte do Senhor!”</p>
+  <p class="ref">Isaías 2:3</p>
+  <p class="note">Com <b>Professora Debora Vezetiv</b> • Escola Bíblica Infantil • Planaltos, montes e montanhas das Terras Bíblicas</p>
+</footer>
+
+<script>
+/* ================= DADOS ================= */
+const CORES = ['c0','c1','c2','c3','c4'];
+
+const PLANALTOS = [
+  {n:'Planalto Central',    d:'É o grupo dos três: reúne os planaltos de Naftali, Efraim e Judá.'},
+  {n:'Planalto de Naftali', d:'Fica ao norte da Galileia, no comecinho da terra.'},
+  {n:'Planalto de Efraim',  d:'Fica bem no centro da Samaria.'},
+  {n:'Planalto de Judá',    d:'Fica ao sul, e é rodeado pelas cidades de Betel e Hebrom.'},
+  {n:'Planalto Oriental',   d:'Fica a leste do rio Jordão — e esconde mais três planaltos dentro dele!'},
+  {n:'Planalto de Basã',    d:'Também tem outro nome: Auram. Fica entre o sul do monte Hermom e o rio Yarmuque.'},
+  {n:'Planalto de Gileade', d:'Fica entre o Yarmuque e Hesbom, e é atravessado pelo rio Jaboque.'},
+  {n:'Planalto de Moabe',   d:'É cheio de pedras, mas tem ótimas pastagens para os animais. Vai do rio Jordão e do Mar Morto até o rio Amom.'}
+];
+
+const TIPOS = [
+  {t:'Outeiro',     d:'É a elevação mais pequenina — menor que um monte. Uma colininha!'},
+  {t:'Monte',       d:'É uma elevação natural de terra, maior que o outeiro.'},
+  {t:'Montanha',    d:'É parecida com o monte, só que mais alta!'},
+  {t:'Cordilheira', d:'É uma fileira de várias montanhas, uma atrás da outra!'}
+];
+
+const MONTES = [
+  {nome:'Ararate', sig:'terra sagrada', loc:'Bem longe, na Armênia', ref:'Gênesis 8:4', altura:5610,
+   txt:'É o <b>monte mais alto</b> da nossa lista e fica bem longe, onde nascem os rios Eufrates, Tigre e Aras. Foi <b>sobre os montes de Ararate que a Arca de Noé pousou</b> depois do grande dilúvio!'},
+  {nome:'Abarim', sig:'do outro lado', loc:'Moabe, em frente a Jericó', ref:'Números 33:47', altura:null,
+   txt:'É uma <b>cadeia de montanhas</b> em Moabe, bem em frente à cidade de Jericó. O monte Nebo faz parte dela! O nome significa “do outro lado” porque ficava do outro lado do rio Jordão.'},
+  {nome:'Basã', sig:'solo fértil', loc:'Ao norte, a leste do Jordão', ref:'Salmos 68:15', altura:1848,
+   txt:'Um monte de <b>terra muito boa para plantar</b>. A Bíblia o compara ao <b>“monte de Deus”</b>. Foi ali que os israelitas venceram o rei Ogue (Números 21:33).'},
+  {nome:'Carmelo', sig:'jardim, campo fértil', loc:'Samaria (região central)', ref:'Josué 19:26', altura:575,
+   txt:'Um monte <b>verde como um jardim</b>, na Samaria! Tem 30 km de comprimento, rochas calcárias e <b>muitas cavernas escondidas</b> do lado da cordilheira.'},
+  {nome:'Ebal', sig:'descoberto', loc:'52 km ao norte de Jerusalém', ref:'Josué 8:30', altura:1015,
+   txt:'Um monte <b>rochoso</b>, com muitas escarpas e quase sem plantas. Nele, Moisés mandou <b>escrever a Lei do Senhor em pedras</b>, para nunca ser esquecida!'},
+  {nome:'Gerizim', sig:'terra estéril', loc:'Juntinho do monte Ebal', ref:'Deuteronômio 11:29', altura:900,
+   txt:'É o <b>vizinho do monte Ebal</b>: os dois ficam juntinhos, um de frente para o outro. Tem 900 metros de altura.'},
+  {nome:'Gilboa', sig:'fonte', loc:'Ao lado da cidade de Jesreel', ref:'1 Samuel 31:1', altura:600,
+   txt:'Um monte cheio de <b>desfiladeiros e abismos</b>, uns suaves e outros bem íngremes. Mesmo assim, seu nome significa “fonte”!'},
+  {nome:'Hermom', sig:'montanha sagrada, pico de montanha', loc:'Na Síria, bem ao norte', ref:'Josué 12:1', altura:2814,
+   txt:'O <b>monte mais alto da Síria</b>! Fica na fronteira ao norte da terra prometida e é <b>coberto de neve na maior parte do ano</b>. Ele é tão alto que dá para avistá-lo desde o Mar Morto!'},
+  {nome:'Hor', sig:'a montanha', loc:'Na terra de Edom (e outro no norte)', ref:'Números 20:22', altura:null,
+   txt:'Existem <b>dois montes com esse nome</b>: um fica na terra de Edom, <b>onde Arão morreu</b>; o outro fica ao norte da Palestina, entre o Mar Mediterrâneo.'},
+  {nome:'Horebe', sig:'deserto, sequidão, terra deserta', loc:'No deserto do Sinai', ref:'Êxodo 3:1', altura:2603,
+   txt:'É o <b>“Monte de Deus”</b> — o mesmo lugar que o Sinai! Ali, Deus falou com Moisés na <b>sarça que ardia sem queimar</b>. Lembre-se: Horebe é a cordilheira, e o Sinai é o pico saliente, mais ao sul.'},
+  {nome:'Líbano', sig:'muito branco, neve', loc:'Bem ao norte da Palestina', ref:'Jeremias 18:14', altura:3000,
+   txt:'Uma cadeia de montes com <b>picos sempre brancos de neve</b> — por isso o nome! É famoso pelos <b>cedros gigantes</b> (1 Reis 5:6), pelas fontes de água cristalina e pelos vales bonitos. A Bíblia o chama de <b>“a Glória do Líbano”</b> (Isaías 35:2)!'},
+  {nome:'Moriá', sig:null, loc:'Em Jerusalém', ref:'2 Crônicas 3:1', altura:null,
+   txt:'Foi neste monte que <b>Deus pediu a Abraão que oferecesse Isaque</b> (Gênesis 22:2) e onde <b>Davi levantou um altar</b> ao Senhor (2 Samuel 24:18). Ali foi edificada a <b>Casa do Senhor</b>, o Templo!'},
+  {nome:'Nebo', sig:null, loc:'Em Moabe, a leste do Jordão', ref:'Deuteronômio 32:49', altura:793,
+   txt:'É o monte de Moabe de onde <b>Moisés olhou bem de cima e viu toda a Terra de Canaã</b>: o monte Hermom, as montanhas de Naftali, o Mar Morto, o Carmelo e o Vale do Jordão!'},
+  {nome:'Monte das Oliveiras', sig:null, loc:'Ao lado de Jerusalém, a leste', ref:'Atos 1:12', altura:null,
+   txt:'Fica a leste de Jerusalém, do outro lado do Vale do Cedrom. Do alto, vê-se a cidade Velha, os montes de Moabe e até o Mar Morto. Foi <b>ali perto que Jesus passou a noite após a Ceia</b> — e foi <b>desse monte que Ele subiu ao céu</b>!'},
+  {nome:'Pisga', sig:'divisão', loc:'Perto do Mar Morto', ref:'Deuteronômio 34:1', altura:null,
+   txt:'Uma cordilheira perto do canto noroeste do Mar Morto. Seu pico mais alto é ninguém menos que o <b>monte Nebo</b> — o lugar de onde Moisés viu a Terra Prometida!'},
+  {nome:'Seir', sig:'áspero, cabeludo', loc:'Na terra de Edom', ref:'Josué 15:19', altura:null,
+   txt:'Uma cordilheira <b>enorme</b>: se estende do Mar Morto até o Mar Vermelho, com 160 km de comprimento por 30 km de largura! Era habitada pelos horeus (Gênesis 14:6), e foi ali que <b>Esaú foi morar</b>.'},
+  {nome:'Sião', sig:'fortaleza', loc:'Em Jerusalém', ref:'Deuteronômio 4:48', altura:null,
+   txt:'A <b>colina famosa de Jerusalém</b>, onde ficava o Grande Templo! Davi construiu ali a sua casa e Salomão construiu o Templo. A Bíblia chama Sião de “monte santo” (Salmos 2:6) e diz: <b>“De Sião sairá a Lei”</b> (Isaías 2:2-3).'},
+  {nome:'Sinai', sig:'lamacento, barrento e brilhante', loc:'Entre os golfos de Suez e Ácaba', ref:'Êxodo 19:2', altura:null,
+   txt:'O monte onde <b>Deus entregou os Dez Mandamentos a Moisés</b>! O povo de Israel acampou diante dele depois de sair do Egito. É também chamado de Horebe — são o mesmo lugar!'},
+  {nome:'Tabor', sig:'altura', loc:'Perto do Mar da Galileia', ref:'Jeremias 46:18', altura:588,
+   txt:'Um monte <b>redondinho, em forma de cúpula</b>, com um platô de mais de 1 km. Ali <b>Baraque venceu Sísera</b> enquanto Débora cantava seu hino (Juízes 4–5) — e foi ali que <b>Jesus se transfigurou</b> diante de Pedro, Tiago e João (Mateus 17:1-5)!'}
+];
+
+/* ================= QUIZ (5 perguntas, 1 ponto cada) ================= */
+const QUIZ = [
+  {q:'Um planalto é...',
+   opts:['Uma terra grande, elevada, com topo mais ou menos plano e cortada por vales',
+         'Um buraco bem fundo no chão',
+         'Um rio que corta a terra',
+         'Um monte sempre coberto de neve'],
+   resp:0,
+   exp:'Planalto é uma grande extensão de terra elevada, plana ou pouco ondulada, cortada por vales — como uma mesa gigante feita de terra!'},
+  {q:'Qual destas elevações é a MENOR de todas?',
+   opts:['Cordilheira','Montanha','Outeiro','Monte'],
+   resp:2,
+   exp:'A ordem do menor para o maior é: outeiro, monte, montanha e cordilheira!'},
+  {q:'Segundo Gênesis 8:4, sobre os montes de Ararate pousou...',
+   opts:['a Arca da Aliança','a Arca de Noé','o Templo de Salomão','o barco de Jonas'],
+   resp:1,
+   exp:'Depois do grande dilúvio, a Arca de Noé pousou sobre os montes de Ararate, que significam “terra sagrada”!'},
+  {q:'Em qual monte Deus entregou os Dez Mandamentos a Moisés?',
+   opts:['Monte das Oliveiras','Monte Gilboa','Monte Sinai (Horebe)','Monte Seir'],
+   resp:2,
+   exp:'Êxodo 19: o povo de Israel acampou diante do monte Sinai, e ali Deus entregou os Dez Mandamentos. E lembre-se: Sinai e Horebe são o mesmo lugar!'},
+  {q:'Em qual monte Jesus se transfigurou, brilhando diante de Pedro, Tiago e João?',
+   opts:['Monte Ebal','Monte Hor','Monte Moriá','Monte Tabor'],
+   resp:3,
+   exp:'Mateus 17:1-5 conta que foi no Monte Tabor que Jesus se transfigurou diante de Pedro, Tiago e João!'}
+];
+
+/* ================= RENDERIZAR CARTÕES ================= */
+const $ = s => document.querySelector(s);
+
+ $('#gradePlanaltos').innerHTML = PLANALTOS.map((p,i)=>`
+  <div class="pcard">
+    <span class="pnum ${CORES[i%5]}">${i+1}</span>
+    <div><h3>${p.n}</h3><p>${p.d}</p></div>
+  </div>`).join('');
+
+ $('#tipos').innerHTML = TIPOS.map((t,i)=>`
+  <div class="tcard">
+    <span class="tn">${i+1}</span>
+    <h4>${t.t}</h4><p>${t.d}</p>
+  </div>`).join('');
+
+ $('#gradeMontes').innerHTML = MONTES.map((m,i)=>{
+  const alt = m.altura
+    ? `<div class="malt"><i data-lucide="ruler" style="width:18px;height:18px"></i>
+         ${m.altura.toLocaleString('pt-BR')} m de altura — como <b>${Math.round(m.altura/5.5).toLocaleString('pt-BR')}&nbsp;girafas</b> empilhadas!</div>`
+    : '';
+  const sig = m.sig
+    ? `<span class="tag sig"><i data-lucide="sparkles" style="width:13px;height:13px"></i> Significa: “${m.sig}”</span>`
+    : '';
+  return `
+  <article class="mcard">
+    <div class="mhead">
+      <span class="mnum ${CORES[i%5]}">${i+1}</span>
+      <h3>${m.nome}</h3>
+    </div>
+    <div class="mtags">
+      ${sig}
+      <span class="tag loc"><i data-lucide="map-pin" style="width:13px;height:13px"></i> ${m.loc}</span>
+      <span class="tag ref"><i data-lucide="book-open" style="width:13px;height:13px"></i> ${m.ref}</span>
+    </div>
+    ${alt}
+    <p class="txt">${m.txt}</p>
+  </article>`;
+}).join('');
+
+/* ================= CONFETE ================= */
+const CORES_CONF = ['#F2B63C','#C4553B','#5F8F3E','#3E8E9E','#E0813C'];
+function confete(n=44){
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div');
+    d.className='confetti';
+    const s=8+Math.random()*10;
+    d.style.cssText=`left:${Math.random()*100}vw;width:${s}px;height:${s*(Math.random()>.5?1:.6)}px;
+      background:${CORES_CONF[i%CORES_CONF.length]};border-radius:${Math.random()>.5?'50%':'3px'};
+      animation-duration:${2.4+Math.random()*1.8}s;animation-delay:${Math.random()*.7}s`;
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(),5200);
+  }
+}
+
+/* ================= RESULTADO ÚNICO =================
+   O desafio só pode ser feito UMA VEZ. Ao concluir, o
+   resultado é salvo no navegador e nunca mais há como
+   refazer — sempre que a página abrir, aparece o resultado. */
+const QUIZ_KEY = 'quiz-terras-biblicas-v1';
+let memoriaQuiz = null; // reserva caso o navegador bloqueie o localStorage
+
+function salvarResultado(){
+  const dados = {
+    pontos: qScore,
+    marcas: qMarks,
+    data  : new Date().toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric'})
+  };
+  memoriaQuiz = dados;
+  try{ localStorage.setItem(QUIZ_KEY, JSON.stringify(dados)); }catch(e){}
+}
+function carregarResultado(){
+  if(memoriaQuiz) return memoriaQuiz;
+  try{
+    const d = JSON.parse(localStorage.getItem(QUIZ_KEY));
+    if(d) memoriaQuiz = d;
+    return d;
+  }catch(e){ return null; }
+}
+
+/* ================= LÓGICA DO QUIZ ================= */
+const quizBox = $('#quizBox');
+const TOTAL_PTS = QUIZ.length; // 5 pontos
+let qIdx=0, qScore=0, qOrdem=[], qMarks=[];
+
+function embaralhar(a){
+  const b=[...a];
+  for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; }
+  return b;
+}
+
+function mensagemFinal(pontos){
+  return pontos===5 ? 'Uau! Você é um Explorador Mestre das Terras Bíblicas!'
+       : pontos===4 ? 'Muito bem! Você conhece direitinho esses planaltos e montes!'
+       : pontos>=2  ? 'Boa! Sua expedição está começando — que tal reler os cartões dos montes?'
+       : 'Toda grande expedição começa com o primeiro passo. Releia a página com calma!';
+}
+function calcEstrelas(pontos){
+  return pontos===5 ? 3 : pontos===4 ? 2 : pontos>=2 ? 1 : 0;
+}
+
+/* Tela inicial → se já existe resultado, mostra ele; senão, oferece o desafio único */
+function quizBoasVindas(){
+  const salvo = carregarResultado();
+  if(salvo){ mostrarResultadoSalvo(salvo); return; }
+
+  quizBox.innerHTML = `
+    <div style="text-align:center">
+      <div class="trophy" style="width:80px;height:80px;margin:0 auto 14px">
+        <i data-lucide="flag" style="width:38px;height:38px;color:#8A6A1B"></i>
+      </div>
+      <h3 style="font-size:1.45rem;margin-bottom:8px">Pronto para o desafio?</h3>
+      <p style="font-weight:700;color:var(--ink-soft);max-width:440px;margin:0 auto 6px">
+        5 perguntas, cada acerto vale <b>1 ponto</b>.</p>
+      <span class="unico-badge">
+        <i data-lucide="lock" style="width:14px;height:14px"></i>
+        Atenção: você só pode responder <b>uma vez</b>!
+      </span>
+      <div class="btns" style="margin-top:16px">
+        <button class="btn green" id="qstart">
+          <i data-lucide="play" style="width:17px;height:17px"></i> Começar o desafio
+        </button>
+      </div>
+    </div>`;
+  if(window.lucide) lucide.createIcons();
+  $('#qstart').addEventListener('click', quizIniciar);
+}
+
+function quizIniciar(){
+  qIdx=0; qScore=0; qMarks=[];
+  qOrdem = QUIZ.map(q=>embaralhar(q.opts.map((t,i)=>({t,certo:i===q.resp}))));
+  quizRender();
+}
+
+function quizRender(){
+  const q = QUIZ[qIdx];
+  quizBox.innerHTML = `
+    <div class="quiz-top">
+      <span class="quiz-count">Pergunta ${qIdx+1} de ${QUIZ.length}</span>
+      <span class="quiz-dots">${QUIZ.map((_,i)=>
+        `<i class="${qMarks[i]===true?'ok':qMarks[i]===false?'bad':i===qIdx?'now':''}"></i>`).join('')}</span>
+    </div>
+    <span class="pts-badge"><i data-lucide="star" style="width:14px;height:14px"></i> Acertou = 1 ponto</span>
+    <p class="quiz-q">${q.q}</p>
+    <div class="opts" id="opts">
+      ${qOrdem[qIdx].map((o,i)=>`
+        <button class="opt" data-i="${i}"><span class="letter">${'ABCD'[i]}</span>${o.t}</button>`).join('')}
+    </div>
+    <div class="quiz-fb" id="qfb"></div>
+    <div class="quiz-act" id="qact">
+      <button class="btn green" id="qnext">${qIdx===QUIZ.length-1?'Ver meu resultado':'Próxima pergunta'} <i data-lucide="arrow-right" style="width:17px;height:17px"></i></button>
+    </div>`;
+  if(window.lucide) lucide.createIcons();
+
+  $('#opts').addEventListener('click', e=>{
+    const b = e.target.closest('.opt');
+    if(b) quizResponder(+b.dataset.i);
+  });
+  $('#qnext').addEventListener('click', ()=>{
+    qIdx++;
+    qIdx < QUIZ.length ? quizRender() : quizFinal();
+  });
+}
+
+function quizResponder(i){
+  const certo = qOrdem[qIdx][i].certo;
+  qMarks[qIdx] = certo;
+  if(certo) qScore++;
+
+  document.querySelectorAll('#opts .opt').forEach((b,j)=>{
+    b.disabled = true;
+    if(qOrdem[qIdx][j].certo) b.classList.add('right');
+    else if(j===i) b.classList.add('wrong');
+    else b.classList.add('dim');
+  });
+
+  const fb = $('#qfb');
+  fb.className = 'quiz-fb show ' + (certo ? 'ok' : 'bad');
+  fb.innerHTML = `
+    <span class="fb-ico" style="background:${certo?'var(--green)':'var(--red)'}">
+      <i data-lucide="${certo?'check':'x'}" style="width:17px;height:17px"></i></span>
+    <span>${certo ? `<b>Isso mesmo! Você ganhou +1 ponto!</b> ` : `<b>Quase! Essa valia 1 ponto.</b> `}${QUIZ[qIdx].exp}</span>`;
+  $('#qact').classList.add('show');
+  if(window.lucide) lucide.createIcons();
+  if(certo) confete(14);
+}
+
+/* Fim do quiz → salva definitivamente */
+function quizFinal(){
+  salvarResultado();
+  renderResultado(qScore, qMarks,
+    new Date().toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric'}), true);
+}
+
+function renderResultado(pontos, marcas, data, comemorar){
+  const estrelas = calcEstrelas(pontos);
+  quizBox.innerHTML = `
+    <div class="quiz-final">
+      <div class="trophy"><i data-lucide="trophy" style="width:46px;height:46px;color:#8A6A1B"></i></div>
+      <h3>Fim do desafio!</h3>
+      <div class="stars">${[0,1,2].map(i=>
+        `<i data-lucide="star" class="${i<estrelas?'lit':''}"></i>`).join('')}</div>
+      <p class="big-pts">${pontos}<span> / ${TOTAL_PTS} pontos</span></p>
+      <div class="mini-res">
+        ${marcas.map((m,i)=>`<span class="qchip ${m?'ok':'bad'}" title="Pergunta ${i+1}">${i+1}</span>`).join('')}
+      </div>
+      <p class="mini-res-leg">verde = acertou &nbsp;•&nbsp; vermelho = errou</p>
+      <p class="msg">${mensagemFinal(pontos)}</p>
+      <span class="salvo-badge">
+        <i data-lucide="save" style="width:15px;height:15px"></i>
+        Resultado salvo neste navegador
+      </span>
+      <p class="data-salva"><i data-lucide="calendar" style="width:13px;height:13px"></i> Feito em ${data}</p>
+      <div class="btns" style="margin-top:16px">
+        <a class="btn orange" href="#montes19"><i data-lucide="book-open" style="width:17px;height:17px"></i> Revisar os montes</a>
+      </div>
+    </div>`;
+  if(window.lucide) lucide.createIcons();
+  if(comemorar && estrelas>=2) confete(70);
+}
+
+function mostrarResultadoSalvo(salvo){
+  qScore = salvo.pontos ?? 0;
+  qMarks = Array.isArray(salvo.marcas) ? salvo.marcas : [];
+  renderResultado(qScore, qMarks, salvo.data || '', false);
+}
+
+/* ================= ANIMAÇÃO SUAVE AO ROLAR ================= */
+const obs = new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){ e.target.classList.add('on'); obs.unobserve(e.target); }
+}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+quizBoasVindas();
+if(window.lucide) lucide.createIcons();
+</script>
+</body>
+</html>
