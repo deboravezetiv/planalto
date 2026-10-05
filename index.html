@@ -11,163 +11,154 @@
 <style>
   :root{
     --paper:#FAF1DC; --paper2:#F2E5C6; --card:#FFFCF3;
-    --ink:#43301F; --ink-soft:#7A6248;
-    --green:#5F8F3E; --green-d:#48702E; --orange:#E0813C; --teal:#3E8E9E;
-    --red:#C4553B; --sun:#F2B63C; --water:#8FC3D6;
-    --shadow:0 6px 0 rgba(67,48,31,.16);
+    --ink:#43301F; --ink-soft:#5F4B33;
+    --green:#5F8F3E; --green-d:#48702E; --orange:#E0813C; --teal:#2E7A8A;
+    --red:#C4553B; --sun:#F2B63C;
+    --shadow:0 5px 0 rgba(67,48,31,.18);
+    --halo:0 1px 0 rgba(255,255,255,.95), 0 0 10px rgba(255,255,255,.9), 0 0 20px rgba(255,255,255,.6);
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{
     font-family:'Nunito',sans-serif;color:var(--ink);
-    /* WALLPAPER: planalto.jpg aparece por completo, sem véu por cima.
-       A cor de fundo só serve de reserva caso a imagem não carregue. */
     background-color:var(--paper);
-    background-image:url('planalto.jpg');
-    background-size:cover;
-    background-position:center;
-    background-attachment:fixed;
-    background-repeat:no-repeat;
-    line-height:1.65;font-size:1.03rem;
+    line-height:1.6;font-size:1.02rem;
+    overflow-x:hidden;
+    -webkit-text-size-adjust:100%;
+    -webkit-tap-highlight-color:transparent;
   }
-  h1,h2,h3,h4{font-family:'Fredoka',sans-serif;line-height:1.2}
+  /* WALLPAPER planalto.jpg — técnica compatível com celular */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-1;
+    background:url('planalto.jpg') center center / cover no-repeat;
+  }
+  h1,h2,h3,h4{font-family:'Fredoka',sans-serif;line-height:1.2;
+    text-shadow:0 1px 0 rgba(255,255,255,.95), 0 0 12px rgba(255,255,255,.95), 0 0 26px rgba(255,255,255,.7)}
   i[data-lucide], svg.lucide{vertical-align:-3px}
-  .wrap{max-width:1000px;margin:0 auto;padding:0 20px}
-  section{padding:58px 0 20px;scroll-margin-top:20px}
+  main, .topo, footer{ text-shadow:var(--halo); }
+  .btn,.opt{touch-action:manipulation}
 
-  /* ---------- Hero ---------- */
-  .hero-top{background:var(--water);border-bottom:4px solid var(--ink);overflow:hidden}
-  .hero-in{max-width:820px;margin:0 auto;padding:52px 20px 8px;text-align:center}
-  .kicker{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:3px solid var(--ink);
-    border-radius:999px;padding:7px 16px;font-weight:800;font-size:.85rem;box-shadow:var(--shadow)}
-  .hero-in h1{font-size:clamp(2rem,5.4vw,3.4rem);margin:18px 0 14px;text-shadow:0 3px 0 rgba(255,255,255,.65)}
-  .hero-in h1 .hl{color:var(--red)}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+  section{padding:54px 0 18px;scroll-margin-top:16px}
+
+  /* ---------- TOPO (transparente sobre a foto) ---------- */
+  .topo{max-width:820px;margin:0 auto;padding:58px 20px 30px;text-align:center}
+  .kicker{display:inline-flex;align-items:center;gap:8px;border:3px solid var(--ink);
+    border-radius:999px;padding:7px 16px;font-weight:800;font-size:.85rem}
+  .topo h1{font-size:clamp(2rem,5.6vw,3.4rem);margin:18px 0 14px}
+  .topo h1 .hl{color:var(--red)}
   .prof-name{display:inline-flex;align-items:center;gap:9px;font-family:'Fredoka';font-weight:600;
-    font-size:1.12rem;background:var(--sun);border:3px solid var(--ink);border-radius:999px;
-    padding:8px 22px;margin-bottom:20px;box-shadow:var(--shadow)}
-  .hero-in p.intro{max-width:600px;margin:0 auto 24px;font-weight:700;color:#2E5A66;font-size:1.12rem}
-  .hero-ctas{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding-bottom:8px}
+    font-size:1.1rem;border:3px solid var(--ink);border-radius:999px;padding:8px 20px}
+  .topo .intro{max-width:600px;margin:18px auto 22px;font-weight:800;color:var(--ink);font-size:1.1rem}
+  .hero-ctas{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
   .btn{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:.95rem;
-    color:var(--ink);background:var(--card);border:3px solid var(--ink);border-radius:14px;padding:11px 18px;
-    text-decoration:none;box-shadow:var(--shadow);transition:transform .15s;cursor:pointer}
+    color:var(--ink);border:3px solid var(--ink);border-radius:14px;padding:11px 18px;
+    text-decoration:none;box-shadow:var(--shadow);transition:transform .15s;cursor:pointer;text-shadow:none}
   .btn:hover{transform:translateY(-3px)}
   .btn.green{background:var(--green);color:#fff}
   .btn.orange{background:var(--orange);color:#fff}
   .btn.sun{background:var(--sun)}
-  .cloud{animation:drift 30s linear infinite}
-  .cloud.c2{animation-duration:40s;animation-delay:-18s}
-  @keyframes drift{from{transform:translateX(-140px)}to{transform:translateX(1200px)}}
-  .bird{animation:bob 3s ease-in-out infinite}
-  .bird.b2{animation-delay:-1.4s}
-  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-  .sun-rays{transform-origin:center;animation:spin 44s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .divider{display:block;width:100%;height:auto}
 
-  /* ---------- Cabeçalhos de seção ----------
-     Texto direto sobre a foto: contorno luminoso leve
-     para continuar legível SEM cobrir a imagem.        */
-  .sec-head{max-width:700px;margin:0 auto 36px;text-align:center}
+  /* ---------- Cabeçalhos de seção ---------- */
+  .sec-head{max-width:700px;margin:0 auto 34px;text-align:center}
   .sec-tag{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--paper);
     font-family:'Fredoka';font-weight:600;font-size:.8rem;letter-spacing:.12em;padding:6px 16px;
-    border-radius:999px;text-transform:uppercase;box-shadow:0 3px 8px rgba(0,0,0,.25)}
-  .sec-head h2{font-size:clamp(1.7rem,4vw,2.4rem);margin:14px 0 8px;
-    text-shadow:0 1px 0 rgba(255,255,255,.9), 0 0 12px rgba(255,255,255,.85), 0 0 22px rgba(255,255,255,.6)}
-  .sec-head p{color:var(--ink);font-weight:800;
-    text-shadow:0 1px 0 rgba(255,255,255,.9), 0 0 10px rgba(255,255,255,.85), 0 0 18px rgba(255,255,255,.6)}
+    border-radius:999px;text-transform:uppercase;box-shadow:0 3px 8px rgba(0,0,0,.3);text-shadow:none}
+  .sec-head h2{font-size:clamp(1.7rem,4vw,2.4rem);margin:14px 0 8px}
+  .sec-head p{color:var(--ink);font-weight:800}
 
-  .panel{background:var(--card);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:26px}
+  .panel{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:24px}
   .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease}
   .reveal.on{opacity:1;transform:none}
 
   /* ---------- Planaltos ---------- */
   .duas-colunas{display:grid;grid-template-columns:1.05fr 1fr;gap:24px;align-items:center;margin-bottom:40px}
   @media(max-width:820px){.duas-colunas{grid-template-columns:1fr}}
-  .big-quote{font-family:'Fredoka';font-weight:600;font-size:1.28rem;line-height:1.5}
+  .big-quote{font-family:'Fredoka';font-weight:600;font-size:1.26rem;line-height:1.5}
   .big-quote b{color:var(--green-d)}
-  .grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
-  .pcard{background:var(--card);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);
-    padding:18px 20px 16px;display:flex;gap:14px;transition:transform .15s}
+  .grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
+  .pcard{border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);
+    padding:18px 18px 15px;display:flex;gap:14px;transition:transform .15s}
   .pcard:hover{transform:translateY(-4px)}
   .pnum{flex:0 0 auto;width:44px;height:44px;border-radius:50%;border:3px solid var(--ink);color:#fff;
-    display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:1.15rem;box-shadow:var(--shadow)}
-  .pcard h3{font-size:1.12rem;margin-bottom:3px}
-  .pcard p{font-weight:600;font-size:.93rem;color:var(--ink-soft)}
+    display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:1.15rem;
+    box-shadow:var(--shadow);text-shadow:none}
+  .pcard h3{font-size:1.1rem;margin-bottom:3px}
+  .pcard p{font-weight:700;font-size:.92rem;color:var(--ink)}
 
   /* ---------- Relevos ---------- */
   .cena-svg{width:100%;height:auto;display:block}
+  .cena-svg .fundo{fill:rgba(255,252,243,.55)}
   .cena-caps{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-  .cena-caps .cap{border:2px dashed var(--ink-soft);border-radius:14px;padding:10px 14px;font-weight:700;
-    font-size:.87rem;color:var(--ink-soft)}
+  .cena-caps .cap{border:2px dashed var(--ink);border-radius:14px;padding:10px 14px;font-weight:800;
+    font-size:.87rem;color:var(--ink)}
   .cena-caps .cap b{display:block;font-family:'Fredoka';color:var(--ink);font-size:1rem}
   .tipos{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:22px}
-  .tcard{background:var(--paper2);border:3px solid var(--ink);border-radius:16px;padding:16px 18px}
+  .tcard{border:3px solid var(--ink);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow)}
   .tcard .tn{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--sun);
-    border:3px solid var(--ink);font-family:'Fredoka';font-weight:700;margin-bottom:8px}
+    border:3px solid var(--ink);font-family:'Fredoka';font-weight:700;margin-bottom:8px;text-shadow:none}
   .tcard h4{font-size:1.1rem;margin-bottom:4px}
-  .tcard p{font-weight:600;font-size:.92rem;color:var(--ink-soft)}
-  .nota{margin-top:20px;display:inline-flex;align-items:flex-start;gap:10px;background:#FBE9A8;
+  .tcard p{font-weight:700;font-size:.92rem;color:var(--ink)}
+  .nota{margin-top:20px;display:inline-flex;align-items:flex-start;gap:10px;
     border:3px solid var(--ink);border-radius:14px;padding:12px 16px;font-weight:800;font-size:.92rem;box-shadow:var(--shadow)}
 
   /* ---------- Cartões dos montes ---------- */
-  .mcard{background:var(--card);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);
-    padding:20px 22px 16px;transition:transform .15s}
+  .mcard{border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);
+    padding:20px 18px 15px;transition:transform .15s}
   .mcard:hover{transform:translateY(-4px)}
   .mhead{display:flex;align-items:center;gap:12px;margin-bottom:10px}
   .mnum{flex:0 0 auto;width:42px;height:42px;border-radius:14px;border:3px solid var(--ink);color:#fff;
-    display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:1.15rem;box-shadow:var(--shadow)}
-  .mhead h3{font-size:1.25rem}
+    display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:1.15rem;
+    box-shadow:var(--shadow);text-shadow:none}
+  .mhead h3{font-size:1.22rem}
   .mtags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
   .tag{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--ink);border-radius:999px;
-    padding:3px 11px;font-weight:800;font-size:.75rem;background:var(--paper2)}
-  .tag.sig{background:#FBE9A8}
-  .tag.loc{background:#E4F0D2}
-  .tag.ref{background:var(--sun)}
+    padding:3px 11px;font-weight:800;font-size:.75rem}
   .malt{display:flex;align-items:center;gap:8px;font-weight:800;font-size:.9rem;color:var(--teal);
-    background:#EAF4F7;border:2px dashed var(--teal);border-radius:12px;padding:8px 12px;margin-bottom:12px}
-  .mcard .txt{font-weight:600;font-size:.95rem;color:var(--ink-soft)}
+    border:2px dashed var(--teal);border-radius:12px;padding:8px 12px;margin-bottom:12px}
+  .mcard .txt{font-weight:700;font-size:.95rem;color:var(--ink)}
   .mcard .txt b{color:var(--ink)}
-  .aviso{display:flex;align-items:center;gap:14px;background:var(--sun);border:3px solid var(--ink);
-    border-radius:18px;padding:16px 20px;font-weight:800;box-shadow:var(--shadow);margin-bottom:26px}
+  .aviso{display:flex;align-items:center;gap:14px;border:3px solid var(--ink);
+    border-radius:18px;padding:16px 18px;font-weight:800;box-shadow:var(--shadow);margin-bottom:26px}
   .aviso i{flex:0 0 auto;color:#8A6A1B}
   .c0{background:var(--green)} .c1{background:var(--orange)} .c2{background:var(--teal)}
   .c3{background:var(--red)} .c4{background:#8A6A3B}
 
   /* ---------- Quiz ---------- */
   .quiz-wrap{max-width:680px;margin:0 auto}
-  .quiz-card{background:var(--card);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:28px}
+  .quiz-card{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:26px}
   .quiz-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-  .quiz-count{font-weight:800;color:var(--ink-soft);font-size:.9rem}
+  .quiz-count{font-weight:800;color:var(--ink);font-size:.9rem}
   .quiz-dots{display:flex;gap:5px}
-  .quiz-dots i{width:11px;height:11px;border-radius:50%;border:2px solid var(--ink);background:var(--paper2)}
+  .quiz-dots i{width:11px;height:11px;border-radius:50%;border:2px solid var(--ink);background:rgba(255,255,255,.65)}
   .quiz-dots i.ok{background:var(--green)}
   .quiz-dots i.bad{background:var(--red)}
   .quiz-dots i.now{background:var(--sun)}
-  .pts-badge{display:inline-flex;align-items:center;gap:6px;background:var(--sun);border:2px solid var(--ink);
+  .pts-badge{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--ink);color:var(--ink);
     border-radius:999px;padding:4px 13px;font-weight:800;font-size:.8rem;margin-bottom:12px}
-  .unico-badge{display:inline-flex;align-items:center;gap:6px;background:#F4D4CB;border:2px solid var(--red);
+  .unico-badge{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--red);color:var(--red);
     border-radius:999px;padding:4px 13px;font-weight:800;font-size:.8rem;margin-bottom:14px}
   .quiz-q{font-family:'Fredoka';font-weight:600;font-size:1.25rem;margin-bottom:18px}
   .opts{display:grid;gap:10px}
-  .opt{display:flex;align-items:center;gap:12px;text-align:left;background:var(--paper2);border:3px solid var(--ink);
-    border-radius:14px;padding:12px 16px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.98rem;
+  .opt{display:flex;align-items:center;gap:12px;text-align:left;border:3px solid var(--ink);
+    border-radius:14px;padding:12px 16px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.97rem;
     color:var(--ink);cursor:pointer;transition:transform .12s, background .12s}
-  .opt:hover:not(:disabled){transform:translateX(5px);background:var(--card)}
+  .opt:hover:not(:disabled){transform:translateX(5px)}
   .opt .letter{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);
-    display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--card)}
-  .opt.right{background:#DDEDC8;border-color:var(--green-d)}
+    display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:rgba(255,255,255,.5);text-shadow:none}
+  .opt.right{border-color:var(--green-d)}
   .opt.right .letter{background:var(--green);color:#fff;border-color:var(--green-d)}
-  .opt.wrong{background:#F4D4CB;border-color:var(--red)}
-  .opt.wrong .letter{background:var(--red);color:#fff}
+  .opt.wrong{border-color:var(--red)}
+  .opt.wrong .letter{background:var(--red);color:#fff;border-color:var(--red)}
   .opt:disabled{cursor:default}
   .opt.dim{opacity:.55}
   .quiz-fb{display:none;margin-top:16px;gap:12px;align-items:flex-start;border-radius:14px;
-    padding:14px 16px;font-weight:700;border:3px solid var(--ink)}
+    padding:14px 16px;font-weight:800;border:3px solid var(--ink)}
   .quiz-fb.show{display:flex}
-  .quiz-fb.ok{background:#E4F0D2}
-  .quiz-fb.bad{background:#F4D4CB}
+  .quiz-fb.ok{border-color:var(--green-d)}
+  .quiz-fb.bad{border-color:var(--red)}
   .fb-ico{flex:0 0 auto;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
-    border:2px solid var(--ink);color:#fff}
+    border:2px solid var(--ink);color:#fff;text-shadow:none}
   .quiz-act{display:none;margin-top:16px;justify-content:flex-end}
   .quiz-act.show{display:flex}
 
@@ -175,87 +166,121 @@
   .quiz-final{text-align:center}
   .quiz-final .trophy{width:92px;height:92px;margin:4px auto 12px;border-radius:50%;background:var(--sun);
     border:4px solid var(--ink);display:grid;place-items:center;box-shadow:var(--shadow)}
-  .salvo-badge{display:inline-flex;align-items:center;gap:7px;background:#E4F0D2;border:2px solid var(--green-d);
-    border-radius:999px;padding:5px 15px;font-weight:800;font-size:.82rem;color:var(--green-d);margin-bottom:10px}
-  .data-salva{font-weight:800;font-size:.85rem;color:var(--ink-soft);margin-top:6px}
-  .big-pts{font-family:'Fredoka';font-weight:700;font-size:2.6rem;color:var(--green-d);margin:10px 0 0}
-  .big-pts span{font-size:1.3rem;color:var(--ink-soft)}
+  .salvo-badge{display:inline-flex;align-items:center;gap:7px;border:2px solid var(--green-d);color:var(--green-d);
+    border-radius:999px;padding:5px 15px;font-weight:800;font-size:.82rem;margin-bottom:10px}
+  .data-salva{font-weight:800;font-size:.85rem;color:var(--ink);margin-top:6px}
+  .big-pts{font-family:'Fredoka';font-weight:700;font-size:2.6rem;color:var(--green-d);margin:10px 0 0;
+    text-shadow:0 1px 0 rgba(255,255,255,.95), 0 0 12px rgba(255,255,255,.95), 0 0 24px rgba(255,255,255,.7)}
+  .big-pts span{font-size:1.3rem;color:var(--ink)}
   .stars{display:flex;justify-content:center;gap:8px;margin:10px 0 4px}
-  .stars i{width:40px;height:40px;color:#D8CCAE}
+  .stars i{width:40px;height:40px;color:rgba(255,255,255,.85)}
   .stars i.lit{color:var(--sun);animation:starpop .5s cubic-bezier(.34,1.7,.64,1) both}
   .stars i.lit:nth-child(2){animation-delay:.18s}
   .stars i.lit:nth-child(3){animation-delay:.36s}
   @keyframes starpop{from{transform:scale(0) rotate(-40deg)}to{transform:scale(1) rotate(0)}}
   .quiz-final h3{font-size:1.5rem;margin-bottom:4px}
-  .quiz-final .msg{font-weight:700;color:var(--ink-soft);margin-bottom:18px}
+  .quiz-final .msg{font-weight:800;color:var(--ink);margin-bottom:18px}
   .quiz-final .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
   .mini-res{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:6px 0 16px}
   .qchip{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;
-    border:2px solid var(--ink);font-family:'Fredoka';font-weight:700;color:#fff}
+    border:2px solid var(--ink);font-family:'Fredoka';font-weight:700;color:#fff;text-shadow:none}
   .qchip.ok{background:var(--green)}
   .qchip.bad{background:var(--red)}
-  .mini-res-leg{font-weight:800;font-size:.78rem;color:var(--ink-soft);margin-bottom:14px}
+  .mini-res-leg{font-weight:800;font-size:.78rem;color:var(--ink);margin-bottom:14px}
 
   /* Confete */
   .confetti{position:fixed;top:-24px;z-index:300;pointer-events:none;animation:fall linear forwards}
   @keyframes fall{to{transform:translateY(112vh) rotate(760deg);opacity:.9}}
 
-  footer{margin-top:64px;border-top:4px solid var(--ink);background:var(--green-d);color:#F4ECD8;
-    text-align:center;padding:34px 20px}
+  /* ---------- RODAPÉ TRANSPARENTE ---------- */
+  footer{margin-top:60px;border-top:4px solid var(--ink);text-align:center;padding:34px 18px;color:var(--ink)}
   footer .verse{font-family:'Fredoka';font-weight:600;font-size:1.25rem;margin-bottom:6px}
-  footer .ref{font-weight:800;font-size:.85rem;opacity:.85}
-  footer .note{margin-top:14px;font-size:.85rem;opacity:.9}
-  footer .note b{color:var(--sun)}
+  footer .ref{font-weight:800;font-size:.85rem}
+  footer .note{margin-top:14px;font-size:.85rem}
+  footer .note b{color:var(--green-d)}
+
+  /* ============ VIDRO FOSCO (transparente meio borrado) ============
+     Fallback primeiro (fundo mais claro, sem blur) para navegadores
+     antigos; em seguida o efeito de vidro para os modernos.          */
+  .panel,.pcard,.mcard,.tcard,.quiz-card,.aviso,.nota,.kicker,.prof-name,.tag,
+  .pts-badge,.unico-badge,.salvo-badge,.malt,.cena-caps .cap,.quiz-fb,.btn,.opt{
+    background:rgba(255,252,243,.88);
+  }
+  @supports((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){
+    .panel,.pcard,.mcard,.tcard,.quiz-card,.aviso,.nota,.kicker,.prof-name,.tag,
+    .pts-badge,.unico-badge,.salvo-badge,.malt,.cena-caps .cap,.quiz-fb{
+      background:rgba(255,252,243,.32);
+      -webkit-backdrop-filter:blur(10px) saturate(1.25);
+      backdrop-filter:blur(10px) saturate(1.25);
+    }
+    .opt{
+      background:rgba(255,252,243,.26);
+      -webkit-backdrop-filter:blur(10px) saturate(1.25);
+      backdrop-filter:blur(10px) saturate(1.25);
+    }
+    .btn{
+      background:rgba(255,252,243,.36);
+      -webkit-backdrop-filter:blur(8px);
+      backdrop-filter:blur(8px);
+    }
+    /* mantém o feedback colorido translúcido das respostas */
+    .opt.right{background:rgba(95,143,62,.34)}
+    .opt.wrong{background:rgba(196,85,59,.34)}
+  }
+
+  /* ============ CORREÇÕES PARA CELULAR ============ */
+  @media(max-width:640px){
+    .wrap{padding:0 14px}
+    section{padding:42px 0 10px}
+    .topo{padding:44px 16px 24px}
+    .prof-name{font-size:1rem;padding:7px 15px}
+    .topo .intro{font-size:1.02rem;margin:16px auto 18px}
+    .hero-ctas{gap:9px}
+    .btn{padding:10px 14px;font-size:.9rem}
+    .sec-head{margin-bottom:24px}
+    .panel{padding:16px 14px;border-radius:18px}
+    .big-quote{font-size:1.12rem}
+    .grade{gap:13px}
+    .pcard{padding:13px 12px;gap:11px}
+    .pnum{width:37px;height:37px;font-size:1rem}
+    .pcard h3{font-size:1rem}
+    .mcard{padding:15px 13px 12px}
+    .mnum{width:36px;height:36px;font-size:1rem;border-radius:12px}
+    .mhead h3{font-size:1.08rem}
+    .tcard{padding:13px 14px}
+    .cena-caps{grid-template-columns:1fr}
+    .nota,.aviso{padding:12px;font-size:.87rem;gap:9px}
+    .quiz-card{padding:18px 14px;border-radius:18px}
+    .quiz-q{font-size:1.1rem;margin-bottom:14px}
+    .opts{gap:8px}
+    .opt{padding:11px 12px;font-size:.92rem;gap:10px}
+    .opt .letter{width:26px;height:26px;font-size:.9rem}
+    .quiz-final .trophy{width:74px;height:74px}
+    .quiz-final .trophy svg{width:36px !important;height:36px !important}
+    .stars i{width:32px;height:32px}
+    .big-pts{font-size:2.1rem}
+    .big-pts span{font-size:1.1rem}
+    .qchip{width:30px;height:30px;font-size:.85rem}
+    .malt{font-size:.82rem;padding:7px 10px}
+    footer{padding:28px 16px}
+    footer .verse{font-size:1.08rem}
+  }
 </style>
 </head>
 <body>
 
-<!-- ============ TOPO ============ -->
-<div class="hero-top" id="inicio">
-  <div class="hero-in">
-    <span class="kicker"><i data-lucide="compass" style="width:16px;height:16px"></i> Escola Bíblica Infantil • Geografia da Bíblia</span>
-    <h1>As Terras Bíblicas: <span class="hl">Planaltos e Montes</span></h1>
-    <span class="prof-name"><i data-lucide="graduation-cap" style="width:20px;height:20px"></i> Professora Debora Vezetiv</span>
-    <p class="intro">Vamos viajar pela terra da Bíblia e conhecer os lugares famosos onde aconteceram histórias incríveis!</p>
-    <div class="hero-ctas">
-      <a class="btn green" href="#planaltos"><i data-lucide="footprints" style="width:18px;height:18px"></i> Planaltos</a>
-      <a class="btn orange" href="#relevos"><i data-lucide="mountain" style="width:18px;height:18px"></i> Montes</a>
-      <a class="btn sun" href="#montes19"><i data-lucide="book-open" style="width:18px;height:18px"></i> Os 19 montes</a>
-    </div>
-  </div>
-  <svg viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true" style="display:block;width:100%">
-    <circle cx="1180" cy="80" r="46" fill="#F2B63C" stroke="#43301F" stroke-width="5"/>
-    <g class="sun-rays" transform="translate(1180,80)" stroke="#F2B63C" stroke-width="8" stroke-linecap="round">
-      <line x1="0" y1="-74" x2="0" y2="-58"/><line x1="0" y1="58" x2="0" y2="74"/>
-      <line x1="-74" y1="0" x2="-58" y2="0"/><line x1="58" y1="0" x2="74" y2="0"/>
-    </g>
-    <g class="cloud" fill="#fff" stroke="#43301F" stroke-width="4">
-      <path d="M60 70 a24 24 0 0 1 46 -9 a20 20 0 0 1 36 7 a16 16 0 0 1 11 14 h-99 a16 16 0 0 1 6 -12z"/>
-    </g>
-    <g class="cloud c2" fill="#fff" stroke="#43301F" stroke-width="4" transform="scale(.7)">
-      <path d="M700 120 a24 24 0 0 1 46 -9 a20 20 0 0 1 36 7 a16 16 0 0 1 11 14 h-99 a16 16 0 0 1 6 -12z"/>
-    </g>
-    <g class="bird" stroke="#43301F" stroke-width="4" fill="none" stroke-linecap="round">
-      <path d="M260 80 q12 -12 24 0 q12 -12 24 0"/>
-    </g>
-    <g class="bird b2" stroke="#43301F" stroke-width="3.4" fill="none" stroke-linecap="round">
-      <path d="M400 46 q10 -10 20 0 q10 -10 20 0"/>
-    </g>
-    <path d="M-20 260 L200 110 L360 230 L520 90 L700 260 L1440 260 L1440 300 L-20 300 Z" fill="#B9CE93"/>
-    <path d="M420 260 L660 70 L880 230 L1040 120 L1280 260 L1440 260 L1440 300 L420 300 Z" fill="#7FA254" stroke="#43301F" stroke-width="5"/>
-    <path d="M632 112 L660 70 L686 110 L672 118 L660 104 L646 116 Z" fill="#fff" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
-    <path d="M-20 260 L130 170 L280 260 Z" fill="#9CB874" stroke="#43301F" stroke-width="5"/>
-    <rect x="-20" y="258" width="1480" height="46" fill="#5F8F3E" stroke="#43301F" stroke-width="5"/>
-    <g transform="translate(660,70)">
-      <line x1="0" y1="0" x2="0" y2="-40" stroke="#43301F" stroke-width="5" stroke-linecap="round"/>
-      <path d="M0 -40 L34 -31 L0 -22 Z" fill="#C4553B" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
-    </g>
-  </svg>
-</div>
-
-<svg class="divider" viewBox="0 0 1440 42" preserveAspectRatio="none" aria-hidden="true">
-  <path d="M0 42 L70 12 L130 32 L200 6 L270 34 L340 10 L410 32 L480 8 L550 34 L620 12 L690 32 L760 6 L830 34 L900 10 L970 32 L1040 8 L1110 34 L1180 12 L1250 32 L1320 8 L1390 34 L1440 14 L1440 42 Z" fill="#FAF1DC"/>
-</svg>
+<!-- ============ TOPO (transparente sobre a foto) ============ -->
+<header class="topo" id="inicio">
+  <span class="kicker"><i data-lucide="compass" style="width:16px;height:16px"></i> Escola Bíblica Infantil • Geografia da Bíblia</span>
+  <h1>As Terras Bíblicas: <span class="hl">Planaltos e Montes</span></h1>
+  <span class="prof-name"><i data-lucide="graduation-cap" style="width:20px;height:20px"></i> Professora Debora Vezetiv</span>
+  <p class="intro">Vamos viajar pela terra da Bíblia e conhecer os lugares famosos onde aconteceram histórias incríveis!</p>
+  <nav class="hero-ctas">
+    <a class="btn green" href="#planaltos"><i data-lucide="footprints" style="width:18px;height:18px"></i> Planaltos</a>
+    <a class="btn orange" href="#relevos"><i data-lucide="mountain" style="width:18px;height:18px"></i> Montes</a>
+    <a class="btn sun" href="#montes19"><i data-lucide="book-open" style="width:18px;height:18px"></i> Os 19 montes</a>
+  </nav>
+</header>
 
 <main class="wrap">
 
@@ -269,10 +294,11 @@
     <div class="duas-colunas reveal">
       <div class="panel">
         <p class="big-quote">Um <b>planalto</b> é uma <b>terra bem grande</b> que fica <b>levantada</b>, com o topo <b>mais ou menos plano</b>, e que é <b>cortada por vales</b> encaixados nela.</p>
-        <p style="margin-top:12px;font-weight:700;color:var(--ink-soft)">Imagine uma <b>mesa gigante feita de terra</b>: o tampo é o planalto, e os vales são como cortes fundos feitos nas suas laterais, por onde passam os rios.</p>
+        <p style="margin-top:12px;font-weight:800">Imagine uma <b>mesa gigante feita de terra</b>: o tampo é o planalto, e os vales são como cortes fundos feitos nas suas laterais, por onde passam os rios.</p>
       </div>
       <div class="panel" style="padding:14px">
         <svg class="cena-svg" viewBox="0 0 520 250" aria-label="Desenho mostrando o perfil de um planalto">
+          <rect class="fundo" x="0" y="0" width="520" height="250" rx="14"/>
           <circle cx="452" cy="48" r="26" fill="#F2B63C" stroke="#43301F" stroke-width="4"/>
           <path d="M30 40 a16 16 0 0 1 30 -6 a14 14 0 0 1 24 5 a11 11 0 0 1 8 10 h-66 a11 11 0 0 1 4 -9z" fill="#fff" stroke="#43301F" stroke-width="3.6"/>
           <path d="M10 96 H240 L280 168 L320 96 H510 V240 H10 Z" fill="#C9A86B" stroke="#43301F" stroke-width="5" stroke-linejoin="round"/>
@@ -303,8 +329,8 @@
 
     <div class="duas-colunas reveal">
       <div class="panel">
-        <p style="font-weight:600;color:var(--ink-soft)">Quando o povo de Israel morou no <b>Egito</b>, a terra era bem <b>plana</b> e <b>quase não chovia</b>. Mas quando chegaram em <b>Canaã</b>, tudo mudou: o lugar era cheio de <b>montes</b>, chovia <b>bem bastante</b> e a terra era <b>ótima para plantar</b>!</p>
-        <p style="margin-top:12px;font-weight:600;color:var(--ink-soft)">Por isso, do livro de <b>Êxodo</b> para frente, os montes aparecem em <b>todas as lembranças do povo de Israel</b>. E eles tinham um truque esperto: construíam suas <b>cidades no alto dos montes</b> para ficarem <b>protegidos</b> dos inimigos!</p>
+        <p style="font-weight:700">Quando o povo de Israel morou no <b>Egito</b>, a terra era bem <b>plana</b> e <b>quase não chovia</b>. Mas quando chegaram em <b>Canaã</b>, tudo mudou: o lugar era cheio de <b>montes</b>, chovia <b>bem bastante</b> e a terra era <b>ótima para plantar</b>!</p>
+        <p style="margin-top:12px;font-weight:700">Por isso, do livro de <b>Êxodo</b> para frente, os montes aparecem em <b>todas as lembranças do povo de Israel</b>. E eles tinham um truque esperto: construíam suas <b>cidades no alto dos montes</b> para ficarem <b>protegidos</b> dos inimigos!</p>
         <div class="cena-caps">
           <div class="cap"><b>Egito</b>terras planas, quase sem chuva</div>
           <div class="cap"><b>Canaã</b>montes, chuva e terra fértil</div>
@@ -312,7 +338,7 @@
       </div>
       <div class="panel" style="padding:14px">
         <svg class="cena-svg" viewBox="0 0 560 250" aria-label="Comparação entre o Egito plano e Canaã montanhosa">
-          <rect width="560" height="250" rx="12" fill="#F2E5C6"/>
+          <rect class="fundo" x="0" y="0" width="560" height="250" rx="14"/>
           <line x1="280" y1="12" x2="280" y2="238" stroke="#43301F" stroke-width="3" stroke-dasharray="8 8"/>
           <g stroke-linejoin="round">
             <path d="M30 178 H250" stroke="#B08A4F" stroke-width="6" stroke-linecap="round"/>
@@ -336,7 +362,7 @@
             </g>
             <g transform="translate(340,52)">
               <path d="M-26 8 a15 15 0 0 1 28 -6 a13 13 0 0 1 22 4 a10 10 0 0 1 7 9 h-60 a10 10 0 0 1 3 -7z" fill="#fff" stroke="#43301F" stroke-width="3.6"/>
-              <g stroke="#3E8E9E" stroke-width="4" stroke-linecap="round">
+              <g stroke="#2E7A8A" stroke-width="4" stroke-linecap="round">
                 <line x1="-16" y1="24" x2="-18" y2="34"/><line x1="0" y1="26" x2="-2" y2="36"/><line x1="16" y1="24" x2="14" y2="34"/>
               </g>
             </g>
@@ -348,8 +374,9 @@
 
     <div class="panel reveal">
       <h3 style="font-size:1.4rem;margin-bottom:8px">Outeiro, monte, montanha ou cordilheira?</h3>
-      <p style="font-weight:600;color:var(--ink-soft)">Essas palavras mostram o <b>tamanho</b> de cada elevação — do menor para o maior:</p>
+      <p style="font-weight:700">Essas palavras mostram o <b>tamanho</b> de cada elevação — do menor para o maior:</p>
       <svg class="cena-svg" viewBox="0 0 860 300" aria-label="Comparação de tamanhos entre outeiro, monte, montanha e cordilheira" style="margin-top:14px">
+        <rect class="fundo" x="0" y="0" width="860" height="300" rx="14"/>
         <line x1="16" y1="252" x2="844" y2="252" stroke="#5F8F3E" stroke-width="9" stroke-linecap="round"/>
         <g>
           <path d="M60 250 Q140 196 220 250 Z" fill="#A9C57F" stroke="#43301F" stroke-width="4" stroke-linejoin="round"/>
@@ -405,6 +432,7 @@
   </section>
 </main>
 
+<!-- ============ RODAPÉ TRANSPARENTE ============ -->
 <footer>
   <p class="verse">“Vinde, subamos ao monte do Senhor!”</p>
   <p class="ref">Isaías 2:3</p>
@@ -522,7 +550,7 @@ const $ = s => document.querySelector(s);
          ${m.altura.toLocaleString('pt-BR')} m de altura — como <b>${Math.round(m.altura/5.5).toLocaleString('pt-BR')}&nbsp;girafas</b> empilhadas!</div>`
     : '';
   const sig = m.sig
-    ? `<span class="tag sig"><i data-lucide="sparkles" style="width:13px;height:13px"></i> Significa: “${m.sig}”</span>`
+    ? `<span class="tag"><i data-lucide="sparkles" style="width:13px;height:13px"></i> Significa: “${m.sig}”</span>`
     : '';
   return `
   <article class="mcard">
@@ -532,8 +560,8 @@ const $ = s => document.querySelector(s);
     </div>
     <div class="mtags">
       ${sig}
-      <span class="tag loc"><i data-lucide="map-pin" style="width:13px;height:13px"></i> ${m.loc}</span>
-      <span class="tag ref"><i data-lucide="book-open" style="width:13px;height:13px"></i> ${m.ref}</span>
+      <span class="tag"><i data-lucide="map-pin" style="width:13px;height:13px"></i> ${m.loc}</span>
+      <span class="tag"><i data-lucide="book-open" style="width:13px;height:13px"></i> ${m.ref}</span>
     </div>
     ${alt}
     <p class="txt">${m.txt}</p>
@@ -601,7 +629,6 @@ function calcEstrelas(pontos){
   return pontos===5 ? 3 : pontos===4 ? 2 : pontos>=2 ? 1 : 0;
 }
 
-/* Tela inicial → se já existe resultado, mostra ele; senão, oferece o desafio único */
 function quizBoasVindas(){
   const salvo = carregarResultado();
   if(salvo){ mostrarResultadoSalvo(salvo); return; }
@@ -612,13 +639,13 @@ function quizBoasVindas(){
         <i data-lucide="flag" style="width:38px;height:38px;color:#8A6A1B"></i>
       </div>
       <h3 style="font-size:1.45rem;margin-bottom:8px">Pronto para o desafio?</h3>
-      <p style="font-weight:700;color:var(--ink-soft);max-width:440px;margin:0 auto 6px">
+      <p style="font-weight:800;max-width:440px;margin:0 auto 6px">
         5 perguntas, cada acerto vale <b>1 ponto</b>.</p>
       <span class="unico-badge">
         <i data-lucide="lock" style="width:14px;height:14px"></i>
         Atenção: você só pode responder <b>uma vez</b>!
       </span>
-      <div class="btns" style="margin-top:16px">
+      <div style="margin-top:16px">
         <button class="btn green" id="qstart">
           <i data-lucide="play" style="width:17px;height:17px"></i> Começar o desafio
         </button>
@@ -687,7 +714,6 @@ function quizResponder(i){
   if(certo) confete(14);
 }
 
-/* Fim do quiz → salva definitivamente */
 function quizFinal(){
   salvarResultado();
   renderResultado(qScore, qMarks,
